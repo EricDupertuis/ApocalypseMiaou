@@ -116,9 +116,9 @@ gameState.prototype = {
     },
 
     createAliens: function () {
-        for (let y = 0; y < 4; y++)
+        for (let y = 0; y < 10; y++)
         {
-            for (let x = 0; x < 10; x++)
+            for (let x = 0; x < 4; x++)
             {
                 let alien = this.aliens.create(x * 48, y * 50, 'invader');
                 alien.anchor.setTo(0.5, 0.5);
@@ -128,14 +128,14 @@ gameState.prototype = {
             }
         }
 
-        this.aliens.x = 100;
+        this.aliens.x = 500;
         this.aliens.y = 50;
 
         //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
-        let tween = this.game.add.tween(this.aliens).to( { x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+        let tween = this.game.add.tween(this.aliens).to( { y: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 
         //  When the tween loops it calls descend
-        tween.onLoop.add(this.descend, this);
+        tween.onLoop.add(this.moveLeft, this);
     },
 
     setupInvader: function (invader) {
@@ -144,12 +144,12 @@ gameState.prototype = {
         invader.animations.add('kaboom');
     },
 
-    descend: function () {
-        this.aliens.y += 10;
+    moveLeft: function () {
+        this.aliens.x -= 10;
     },
 
     update: function () {
-        this.backgroundGroup.y += 2;
+        this.backgroundGroup.x -= 2;
 
         if (this.player.alive) {
             //  Reset the player, then check for movement keys
@@ -167,7 +167,6 @@ gameState.prototype = {
                 this.player.body.velocity.y = 200;
             }
 
-            //  Firing?
             if (this.fireButton.isDown) {
                 this.fireBullet();
             }
@@ -184,7 +183,6 @@ gameState.prototype = {
     },
 
     collisionHandler: function (bullet, alien) {
-        "use strict";
         //  When a bullet hits an alien we kill them both
         bullet.kill();
         alien.kill();
@@ -208,7 +206,6 @@ gameState.prototype = {
     },
 
     enemyBulletHitsPlayer: function (player,bullet) {
-
         bullet.kill();
 
         this.live = this.lives.getFirstAlive();
@@ -233,7 +230,6 @@ gameState.prototype = {
         if (this.game.time.now < player.deathCooldown) {
             return;
         }
-
 
         enemy.kill();
 
@@ -295,7 +291,7 @@ gameState.prototype = {
             {
                 //  And fire it
                 this.bullet.reset(this.player.x, this.player.y + 8);
-                this.bullet.body.velocity.y = -400;
+                this.bullet.body.velocity.x = 400;
                 this.bulletTime = this.game.time.now + 200;
             }
         }
