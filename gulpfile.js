@@ -23,7 +23,7 @@ function bundles(profile) {
 
     if (bundlers === undefined) {
         let opts = {},
-            presets = [];
+            presets = ["babel-preset-es2015"];
 
         if (profile == "prod") {
             opts.debug = false;
