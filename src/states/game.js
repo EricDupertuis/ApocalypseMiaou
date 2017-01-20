@@ -153,37 +153,28 @@ gameState.prototype = {
     update: function () {
         this.backgroundGroup.y += 2;
 
-        if (this.player.alive)
-        {
+        if (this.player.alive) {
             //  Reset the player, then check for movement keys
             this.player.body.velocity.setTo(0, 0);
 
-            if (this.cursors.left.isDown)
-            {
+            if (this.cursors.left.isDown) {
                 this.player.body.velocity.x = -200;
-            }
-            else if (this.cursors.right.isDown)
-            {
+            } else if (this.cursors.right.isDown) {
                 this.player.body.velocity.x = 200;
             }
 
-            if (this.cursors.up.isDown)
-            {
+            if (this.cursors.up.isDown) {
                 this.player.body.velocity.y = -200;
-            }
-            else if (this.cursors.down.isDown)
-            {
+            } else if (this.cursors.down.isDown) {
                 this.player.body.velocity.y = 200;
             }
 
             //  Firing?
-            if (this.fireButton.isDown)
-            {
+            if (this.fireButton.isDown) {
                 this.fireBullet();
             }
 
-            if (this.game.time.now > this.firingTimer)
-            {
+            if (this.game.time.now > this.firingTimer) {
                 this.enemyFires();
             }
 
@@ -191,7 +182,6 @@ gameState.prototype = {
             this.game.physics.arcade.overlap(this.bullets, this.aliens, this.collisionHandler, null, this);
             this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.enemyHitsPlayer, null, this);
         }
-
     },
 
     collisionHandler: function (bullet, alien) {
@@ -267,7 +257,6 @@ gameState.prototype = {
 
         if (this.enemyBullet && this.livingEnemies.length > 0)
         {
-
             let random = this.game.rnd.integerInRange(0, this.livingEnemies.length-1);
 
             // randomly select one of them
@@ -278,11 +267,9 @@ gameState.prototype = {
             this.game.physics.arcade.moveToObject(this.enemyBullet, this.player,120);
             this.firingTimer = this.game.time.now + 2000;
         }
-
     },
 
     fireBullet: function () {
-
          //  To avoid them being allowed to fire too fast we set a time limit
         if (this.game.time.now > this.bulletTime)
         {
@@ -297,7 +284,6 @@ gameState.prototype = {
                 this.bulletTime = this.game.time.now + 200;
             }
         }
-
     },
 
     resetBullet: function (bullet) {
@@ -307,16 +293,13 @@ gameState.prototype = {
 
     restart: function () {
         //  A new level starts
-
         //resets the life count
         this.lives.callAll('revive');
         //  And brings the aliens back from the dead :)
         this.aliens.removeAll();
         this.createAliens();
 
-        //revives the player
         this.player.revive();
-        //hides the text
         this.stateText.visible = false;
 
     }
