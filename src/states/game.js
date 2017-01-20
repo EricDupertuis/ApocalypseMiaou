@@ -1,13 +1,4 @@
-let gameState = (game) => {
-    "use strict";
-    let textConfig = {
-        font: "16px Arial",
-        fill: "#E8EAF6",
-        align: "center",
-        wordWrap: true,
-        wordWrapWidth: 600
-    }
-};
+let gameState = (game) => {};
 
 gameState.prototype = {
     init: function () {
