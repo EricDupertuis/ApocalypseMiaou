@@ -168,8 +168,8 @@ gameState.prototype = {
 
             //  Run collision
             this.game.physics.arcade.overlap(this.bullets, this.aliens, this.collisionHandler, null, this);
-            this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.enemyBulletHitsPlayer, null, this);
-            this.game.physics.arcade.overlap(this.player, this.aliens, this.enemyHitsPlayer, null, this);
+            this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.hitPlayer, null, this);
+            this.game.physics.arcade.overlap(this.player, this.aliens, this.hitPlayer, null, this);
         }
     },
 
@@ -196,28 +196,7 @@ gameState.prototype = {
         }
     },
 
-    enemyBulletHitsPlayer: function (player,bullet) {
-        bullet.kill();
-
-        this.live = this.lives.getFirstAlive();
-
-        if (this.live) {
-            this.live.kill();
-        }
-
-        //  And create an explosion :)
-        let explosion = this.explosions.getFirstExists(false);
-        explosion.reset(player.body.x, player.body.y);
-        explosion.play('kaboom', 30, false, true);
-
-        // When the player dies
-        if (this.lives.countLiving() < 1) {
-            player.kill();
-            this.enemyBullets.callAll('kill');
-        }
-    },
-
-    enemyHitsPlayer: function (player, enemy) {
+    hitPlayer: function (player, enemy) {
         if (this.game.time.now < player.deathCooldown) {
             return;
         }
