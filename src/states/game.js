@@ -39,11 +39,12 @@ gameState.prototype = {
     },
 
     create: function () {
-        this.game.world.setBounds(0, 0, this.world.width, 1000);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
+        this.backgroundGroup = this.game.add.group();
+
         //  The scrolling starfield background
-        this.starfield = this.game.add.tileSprite(0, 0, this.world.width, this.world.height, 'starfield');
+        this.starfield = this.backgroundGroup.create(0, 0, 'starfield');
 
         //  Our bullet group
         this.bullets = this.game.add.group();
@@ -69,7 +70,8 @@ gameState.prototype = {
         this.game.camera.follow(this.player);
 
         //  The baddies!
-        this.aliens = this.game.add.group();
+        let aliens = this.game.add.group();
+        this.aliens = this.backgroundGroup.add(aliens);
         this.aliens.enableBody = true;
         this.aliens.physicsBodyType = Phaser.Physics.ARCADE;
 
@@ -107,7 +109,7 @@ gameState.prototype = {
     },
 
     createPlayer: function() {
-        let player = this.game.add.sprite(400, this.world.height+100, 'ship');
+        let player = this.game.add.sprite(400, 500, 'ship');
         this.game.physics.enable(player, Phaser.Physics.ARCADE);
         player.anchor.setTo(0.5, 0.5);
         player.body.collideWorldBounds = true;
@@ -149,6 +151,8 @@ gameState.prototype = {
     },
 
     update: function () {
+        this.backgroundGroup.y += 2;
+
         if (this.player.alive)
         {
             //  Reset the player, then check for movement keys
