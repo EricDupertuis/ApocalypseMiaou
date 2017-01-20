@@ -26,7 +26,7 @@ gulp.task('js-watch', ['build'], function (done) {
 });
 
 // use default task to launch Browsersync and watch JS files
-gulp.task('serve', ['build'], function () {
+gulp.task('default', ['build'], function () {
 
     // Serve files from the root of this project
     browserSync.init({
@@ -37,5 +37,5 @@ gulp.task('serve', ['build'], function () {
 
     // add browserSync.reload to the tasks array to make
     // all browsers reload after tasks are complete.
-    gulp.watch("src/*.js", ['js-watch']);
+    gulp.watch("src/**/*.js", ['js-watch']);
 });
