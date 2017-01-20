@@ -230,8 +230,6 @@ gameState.prototype = {
     },
 
     enemyHitsPlayer: function (player, enemy) {
-        console.log(this.game.time.now, player.deathCooldown);
-
         if (this.game.time.now < player.deathCooldown) {
             return;
         }

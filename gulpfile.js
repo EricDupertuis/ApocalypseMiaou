@@ -76,9 +76,11 @@ function bundle(file) {
             .pipe(gulp.dest(dest.js)),
         time = new Date().getTime() - start;
 
-    browserSync.reload();
+    setTimeout(function () {
+        browserSync.reload();
+    }, 1500);
 
-    util.log("[browserify] rebundle took ", util.colors.cyan(`${time} ms`), util.colors.grey(`(${file})`));
+    util.log("[browserify] srebundle took ", util.colors.cyan(`${time} ms`), util.colors.grey(`(${file})`));
 
     return _;
 }
