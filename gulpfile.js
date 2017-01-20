@@ -1,22 +1,22 @@
 "use strict";
 
-const browserify = require("browserify"),
-    buffer       = require("vinyl-buffer"),
-    gulp         = require("gulp"),
-    path         = require("path"),
-    plumber      = require('gulp-plumber'),
-    source       = require("vinyl-source-stream"),
-    util         = require("gulp-util"),
-    watchify     = require("watchify"),
-    browserSync = require('browser-sync'),
-    sourcemaps = require('gulp-sourcemaps'),
+const browserify = require("browserify");
+const buffer       = require("vinyl-buffer");
+const gulp         = require("gulp");
+const path         = require("path");
+const plumber      = require('gulp-plumber');
+const source       = require("vinyl-source-stream");
+const util         = require("gulp-util");
+const watchify     = require("watchify");
+const browserSync = require('browser-sync');
+const sourcemaps = require('gulp-sourcemaps');
 
-    src = {
-        js:     ["./src/app.js"]
-    },
-    dest = {
-        js:     "./dist/"
-    };
+const src = {
+    js:     ["./src/app.js"]
+};
+const dest = {
+    js:     "./dist/"
+};
 
 let bundlers;
 
