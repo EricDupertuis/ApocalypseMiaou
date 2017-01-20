@@ -36,7 +36,6 @@ gameState.prototype = {
         this.game.load.image('ship', 'assets/example/player.png');
         this.game.load.spritesheet('kaboom', 'assets/example/explode.png', 128, 128);
         this.game.load.image('starfield', 'assets/example/starfield.png');
-        this.game.load.image('background', 'assets/example/background2.png');
     },
 
     create: function () {
@@ -44,7 +43,7 @@ gameState.prototype = {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //  The scrolling starfield background
-        this.starfield = this.game.add.tileSprite(0, 0, 800, 600, 'starfield');
+        this.starfield = this.game.add.tileSprite(0, 0, this.world.width, this.world.height, 'starfield');
 
         //  Our bullet group
         this.bullets = this.game.add.group();
@@ -108,7 +107,7 @@ gameState.prototype = {
     },
 
     createPlayer: function() {
-        let player = this.game.add.sprite(400, 500, 'ship');
+        let player = this.game.add.sprite(400, this.world.height+100, 'ship');
         this.game.physics.enable(player, Phaser.Physics.ARCADE);
         player.anchor.setTo(0.5, 0.5);
         player.body.collideWorldBounds = true;
@@ -150,9 +149,6 @@ gameState.prototype = {
     },
 
     update: function () {
-        //  Scroll the background
-        this.starfield.tilePosition.y += 2;
-
         if (this.player.alive)
         {
             //  Reset the player, then check for movement keys
