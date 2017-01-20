@@ -142,6 +142,12 @@ gameState.prototype = {
     update: function () {
         this.backgroundGroup.x -= 2;
 
+        this.bullets.forEachAlive(function(bullet) {
+            console.log(this.game.time.now - bullet.fireTime, bullet.fireTime);
+            bullet.
+            bullet.scale.setTo(1, 1 + 10 * (this.game.time.now - bullet.fireTime) / 1000);
+        }, this);
+
         if (this.player.alive) {
             //  Reset the player, then check for movement keys
             this.player.body.velocity.setTo(0, 0);
@@ -263,6 +269,7 @@ gameState.prototype = {
                 this.bullet.reset(this.player.x, this.player.y + 8);
                 this.bullet.body.velocity.x = 400;
                 this.bulletTime = this.game.time.now + 200;
+                this.bullet.fireTime = this.game.time.now;
             }
         }
     },
