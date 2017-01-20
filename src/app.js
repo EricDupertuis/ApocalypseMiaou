@@ -8,4 +8,6 @@ const game = new Phaser.Game(800, 600, Phaser.AUTO, 'ggj17');
 
 game.state.add("Menu", menuState);
 game.state.add("Game", gameState);
-game.state.start("Menu");
+
+//TODO: Turn this back to "Menu"
+game.state.start("Game");
