@@ -217,14 +217,14 @@ gameState.prototype = {
         }
 
         //  And create an explosion :)
-        let explosion = explosions.getFirstExists(false);
+        let explosion = this.explosions.getFirstExists(false);
         explosion.reset(player.body.x, player.body.y);
         explosion.play('kaboom', 30, false, true);
 
         // When the player dies
         if (this.lives.countLiving() < 1) {
             player.kill();
-            this.nemyBullets.callAll('kill');
+            this.enemyBullets.callAll('kill');
 
             this.stateText.text = " GAME OVER \n Click to restart";
             this.stateText.visible = true;
