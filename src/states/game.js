@@ -91,9 +91,9 @@ gameState.prototype = {
         this.stateText.anchor.setTo(0.5, 0.5);
         this.stateText.visible = false;
 
-        for (var i = 0; i < 3; i++)
+        for (let i = 0; i < 3; i++)
         {
-            var ship = this.lives.create(this.game.world.width - 100 + (30 * i), 60, 'ship');
+            let ship = this.lives.create(this.game.world.width - 100 + (30 * i), 60, 'ship');
             ship.anchor.setTo(0.5, 0.5);
             ship.angle = 90;
             ship.alpha = 0.4;
@@ -217,7 +217,7 @@ gameState.prototype = {
         }
 
         //  And create an explosion :)
-        var explosion = explosions.getFirstExists(false);
+        let explosion = explosions.getFirstExists(false);
         explosion.reset(player.body.x, player.body.y);
         explosion.play('kaboom', 30, false, true);
 
@@ -251,10 +251,10 @@ gameState.prototype = {
         if (this.enemyBullet && this.livingEnemies.length > 0)
         {
 
-            var random = this.game.rnd.integerInRange(0, this.livingEnemies.length-1);
+            let random = this.game.rnd.integerInRange(0, this.livingEnemies.length-1);
 
             // randomly select one of them
-            var shooter = this.livingEnemies[random];
+            let shooter = this.livingEnemies[random];
             // And fire the bullet from this enemy
             this.enemyBullet.reset(shooter.body.x, shooter.body.y);
 
