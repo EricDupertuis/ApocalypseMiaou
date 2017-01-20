@@ -20,9 +20,7 @@ menuState.prototype = {
     },
 
     preload: function () {
-        /** @var game Phaser */
-        this.game.load.baseURL = 'assets/';
-    },
+        },
 
     create: function () {
         this.goKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
