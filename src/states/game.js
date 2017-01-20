@@ -1,4 +1,4 @@
-let gameState = () => {
+let gameState = (game) => {
     "use strict";
     let textConfig = {
         font: "16px Arial",
@@ -7,22 +7,24 @@ let gameState = () => {
         wordWrap: true,
         wordWrapWidth: 600
     }
-    
-    function init() {
-        
-    }
-
-    function preload () {
-
-    }
-    
-    function create() {
-        
-    }
-    
-    function update() {
-        
-    }
 };
+
+gameState.prototype = {
+    init: function () {
+
+    },
+
+    preload: function () {
+
+    },
+
+    create: function () {
+
+    },
+
+    update: function () {
+
+    }
+}
 
 module.exports = gameState;
