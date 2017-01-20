@@ -25,7 +25,6 @@ gameState.prototype = {
         this.lives = null;
         this.enemyBullet = null;
         this.firingTimer = 0;
-        this.stateText = null;
         this.livingEnemies = [];
     },
 
@@ -85,10 +84,6 @@ gameState.prototype = {
         this.lives = this.game.add.group();
         this.game.add.text(this.game.world.width - 100, 10, 'Lives : ', { font: '34px Arial', fill: '#fff' });
 
-        //  Text
-        this.stateText = this.game.add.text(this.game.world.centerX, this.game.world.centerY,' ', { font: '84px Arial', fill: '#fff' });
-        this.stateText.anchor.setTo(0.5, 0.5);
-        this.stateText.visible = false;
 
         for (let i = 0; i < 3; i++)
         {
@@ -115,6 +110,7 @@ gameState.prototype = {
         player.enableBody = true;
         player.anchor.setTo(0.5, 0.5);
         player.body.collideWorldBounds = true;
+        player.deathCooldown = 0;
 
         return player;
     },
@@ -182,7 +178,7 @@ gameState.prototype = {
 
             //  Run collision
             this.game.physics.arcade.overlap(this.bullets, this.aliens, this.collisionHandler, null, this);
-            this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.enemyHitsPlayer, null, this);
+            this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.enemyBulletHitsPlayer, null, this);
             this.game.physics.arcade.overlap(this.player, this.aliens, this.enemyHitsPlayer, null, this);
         }
     },
@@ -208,15 +204,10 @@ gameState.prototype = {
             this.scoreText.text = this.scoreString + this.score;
 
             this.enemyBullets.callAll('kill',this);
-            this.stateText.text = " You Won, \n Click to restart";
-            this.stateText.visible = true;
-
-            //the "click to restart" handler
-            this.game.input.onTap.addOnce(this.restart,this);
         }
     },
 
-    enemyHitsPlayer: function (player,bullet) {
+    enemyBulletHitsPlayer: function (player,bullet) {
 
         bullet.kill();
 
@@ -235,13 +226,36 @@ gameState.prototype = {
         if (this.lives.countLiving() < 1) {
             player.kill();
             this.enemyBullets.callAll('kill');
-
-            this.stateText.text = " GAME OVER \n Click to restart";
-            this.stateText.visible = true;
-
-            //the "click to restart" handler
-            this.game.input.onTap.addOnce(this.restart, this);
         }
+    },
+
+    enemyHitsPlayer: function (player, enemy) {
+        console.log(this.game.time.now, player.deathCooldown);
+
+        if (this.game.time.now < player.deathCooldown) {
+            return;
+        }
+
+
+        enemy.kill();
+
+        this.live = this.lives.getFirstAlive();
+
+        if (this.live) {
+            this.live.kill();
+        }
+
+        //  And create an explosion :)
+        let explosion = this.explosions.getFirstExists(false);
+        explosion.reset(player.body.x, player.body.y);
+        explosion.play('kaboom', 30, false, true);
+
+        // When the player dies
+        if (this.lives.countLiving() < 1) {
+            this.game.state.start("Menu");
+        }
+
+        player.deathCooldown = this.game.time.now + 1000;
     },
 
 
@@ -294,18 +308,6 @@ gameState.prototype = {
         bullet.kill();
     },
 
-    restart: function () {
-        //  A new level starts
-        //resets the life count
-        this.lives.callAll('revive');
-        //  And brings the aliens back from the dead :)
-        this.aliens.removeAll();
-        this.createAliens();
-
-        this.player.revive();
-        this.stateText.visible = false;
-
-    }
 }
 
 module.exports = gameState;
