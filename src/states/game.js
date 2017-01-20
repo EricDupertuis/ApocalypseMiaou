@@ -40,7 +40,7 @@ gameState.prototype = {
     },
 
     create: function () {
-
+        this.game.world.setBounds(0, 0, this.world.width, 1000);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //  The scrolling starfield background
@@ -66,10 +66,8 @@ gameState.prototype = {
         this.enemyBullets.setAll('outOfBoundsKill', true);
         this.enemyBullets.setAll('checkWorldBounds', true);
 
-        //  The hero!
-        this.player = this.game.add.sprite(400, 500, 'ship');
-        this.player.anchor.setTo(0.5, 0.5);
-        this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
+        this.player = this.createPlayer();
+        this.game.camera.follow(this.player);
 
         //  The baddies!
         this.aliens = this.game.add.group();
@@ -107,6 +105,15 @@ gameState.prototype = {
         //  And some controls to play the game with
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    },
+
+    createPlayer: function() {
+        let player = this.game.add.sprite(400, 500, 'ship');
+        this.game.physics.enable(player, Phaser.Physics.ARCADE);
+        player.anchor.setTo(0.5, 0.5);
+        player.body.collideWorldBounds = true;
+
+        return player;
     },
 
     createAliens: function () {
@@ -160,6 +167,15 @@ gameState.prototype = {
                 this.player.body.velocity.x = 200;
             }
 
+            if (this.cursors.up.isDown)
+            {
+                this.player.body.velocity.y = -200;
+            }
+            else if (this.cursors.down.isDown)
+            {
+                this.player.body.velocity.y = 200;
+            }
+
             //  Firing?
             if (this.fireButton.isDown)
             {
@@ -175,6 +191,7 @@ gameState.prototype = {
             this.game.physics.arcade.overlap(this.bullets, this.aliens, this.collisionHandler, null, this);
             this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.enemyHitsPlayer, null, this);
         }
+
     },
 
     collisionHandler: function (bullet, alien) {
