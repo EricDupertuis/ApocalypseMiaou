@@ -8,6 +8,8 @@ const browserify = require("browserify"),
     source       = require("vinyl-source-stream"),
     util         = require("gulp-util"),
     watchify     = require("watchify"),
+    browserSync = require('browser-sync'),
+    sourcemaps = require('gulp-sourcemaps'),
 
     src = {
         js:     ["./src/app.js"]
@@ -69,8 +71,12 @@ function bundle(file) {
             .on("error", util.log.bind(util, "Browserify Error"))
             .pipe(source(`${path.parse(file).name}.js`))
             .pipe(buffer())
+            .pipe(sourcemaps.init({ loadMaps: true }))
+            .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest(dest.js)),
         time = new Date().getTime() - start;
+
+    browserSync.reload();
 
     util.log("[browserify] rebundle took ", util.colors.cyan(`${time} ms`), util.colors.grey(`(${file})`));
 
@@ -92,4 +98,34 @@ gulp.task("watch", function () {
 gulp.task("dev", ["js:dev"]);
 gulp.task("prod", ["js:prod"]);
 
-gulp.task("default", ["watch", "dev"]);
+gulp.task("default", ["watch", "dev"], function () {
+    // Serve files from the root of this project
+    browserSync.init({
+        server: {
+            baseDir: "./"
+        }
+    });
+});
+
+
+// create a task that ensures the `js` task is complete before
+// reloading browsers
+gulp.task('DoNotUse', ['build'], function (done) {
+    browserSync.reload();
+    done();
+});
+
+// use default task to launch Browsersync and watch JS files
+gulp.task('Old', ['build'], function () {
+
+    // Serve files from the root of this project
+    browserSync.init({
+        server: {
+            baseDir: "./"
+        }
+    });
+
+    // add browserSync.reload to the tasks array to make
+    // all browsers reload after tasks are complete.
+    gulp.watch("src/**/*.js", ['js-watch']);
+});

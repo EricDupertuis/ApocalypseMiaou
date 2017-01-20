@@ -16,6 +16,7 @@
     "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",
     "gulp-plumber": "^1.1.0",
+    "gulp-sourcemaps": "^2.4.0",
     "gulp-util": "^3.0.8",
     "phaser": "^2.6.2",
     "vinyl-buffer": "^1.0.0",
