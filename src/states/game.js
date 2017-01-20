@@ -111,6 +111,8 @@ gameState.prototype = {
     createPlayer: function() {
         let player = this.game.add.sprite(400, 500, 'ship');
         this.game.physics.enable(player, Phaser.Physics.ARCADE);
+        player.physicsBodyType = Phaser.Physics.ARCADE;
+        player.enableBody = true;
         player.anchor.setTo(0.5, 0.5);
         player.body.collideWorldBounds = true;
 
@@ -181,6 +183,7 @@ gameState.prototype = {
             //  Run collision
             this.game.physics.arcade.overlap(this.bullets, this.aliens, this.collisionHandler, null, this);
             this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.enemyHitsPlayer, null, this);
+            this.game.physics.arcade.overlap(this.player, this.aliens, this.enemyHitsPlayer, null, this);
         }
     },
 
