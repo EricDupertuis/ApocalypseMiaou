@@ -110,11 +110,11 @@ gameState.prototype = {
     },
 
     createAliens: function () {
-        for (var y = 0; y < 4; y++)
+        for (let y = 0; y < 4; y++)
         {
-            for (var x = 0; x < 10; x++)
+            for (let x = 0; x < 10; x++)
             {
-                var alien = this.aliens.create(x * 48, y * 50, 'invader');
+                let alien = this.aliens.create(x * 48, y * 50, 'invader');
                 alien.anchor.setTo(0.5, 0.5);
                 alien.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
                 alien.play('fly');
@@ -126,7 +126,7 @@ gameState.prototype = {
         this.aliens.y = 50;
 
         //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
-        var tween = this.game.add.tween(this.aliens).to( { x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+        let tween = this.game.add.tween(this.aliens).to( { x: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 
         //  When the tween loops it calls descend
         tween.onLoop.add(this.descend, this);
@@ -188,7 +188,7 @@ gameState.prototype = {
         this.scoreText.text = this.scoreString + this.score;
 
         //  And create an explosion :)
-        var explosion = this.explosions.getFirstExists(false);
+        let explosion = this.explosions.getFirstExists(false);
         explosion.reset(alien.body.x, alien.body.y);
         explosion.play('kaboom', 30, false, true);
 
