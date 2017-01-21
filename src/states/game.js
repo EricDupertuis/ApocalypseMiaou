@@ -93,6 +93,7 @@ gameState.prototype = {
         this.cursors = this.game.input.keyboard.createCursorKeys();
         this.mainGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.shockWaveButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
+        this.waveGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
     },
 
     createPlayer: function() {
@@ -167,6 +168,10 @@ gameState.prototype = {
 
             if (this.mainGunButton.isDown) {
                 this.fireBullet(null);
+            }
+
+            if (this.waveGunButton.isDown) {
+                this.fireBullet(this.updateWaveBullet);
             }
 
             if (this.shockWaveButton.isDown) {
@@ -275,7 +280,7 @@ gameState.prototype = {
                 //  And fire it
                 this.bullet.reset(this.player.x, this.player.y + 8);
                 this.bullet.body.velocity.x = 400;
-                this.bulletTime = this.game.time.now + 200;
+                this.bulletTime = this.game.time.now + 100;
                 this.bullet.fireTime = this.game.time.now;
                 this.bullet.bulletUpdate = update;
             }
@@ -284,6 +289,14 @@ gameState.prototype = {
 
     updateShockwaveBullet: function (bullet) {
         bullet.scale.setTo(1, 1 + 10 * (this.game.time.now - bullet.fireTime) / 1000);
+    },
+
+    updateWaveBullet: function (bullet) {
+        let angle = 2 * 1 * Math.PI * (this.game.time.now - bullet.fireTime) / 1000;
+        let vel =  500 * Math.sin(angle);
+        console.log(vel);
+        bullet.body.velocity.y = vel;
+
     },
 
     resetBullet: function (bullet) {
