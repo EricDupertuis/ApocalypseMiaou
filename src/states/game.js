@@ -10,7 +10,7 @@ gameState.prototype = {
         this.cursors = null;
         this.mainGunButton = null;
         this.explosions = null;
-        this.starfield = null;
+        this.background = null;
         this.score = 0;
         this.scoreString = '';
         this.scoreText = null;
@@ -26,7 +26,7 @@ gameState.prototype = {
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 32, 32);
         this.game.load.image('lion', 'assets/characters/lion_1.png');
         this.game.load.spritesheet('kaboom', 'assets/example/explode.png', 128, 128);
-        this.game.load.image('starfield', 'assets/example/starfield.png');
+        this.game.load.image('background', 'assets/background.jpg');
     },
 
     create: function () {
@@ -34,8 +34,8 @@ gameState.prototype = {
 
         this.backgroundGroup = this.game.add.group();
 
-        //  The scrolling starfield background
-        this.starfield = this.backgroundGroup.create(0, 0, 'starfield');
+        // background image
+        this.background = this.backgroundGroup.create(0, 0, 'background');
 
         //  Our bullet group
         this.bullets = this.game.add.group();
