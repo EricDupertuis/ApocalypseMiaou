@@ -63,10 +63,11 @@ gameState.prototype = {
         //  The baddies!
         let ennemies = this.game.add.group();
         this.ennemies = this.backgroundGroup.add(ennemies);
+
         this.ennemies.enableBody = true;
         this.ennemies.physicsBodyType = Phaser.Physics.ARCADE;
 
-        this.createEnnemies();
+        this.createEnemies();
 
         //  The score
         this.scoreString = 'Score : ';
@@ -118,35 +119,45 @@ gameState.prototype = {
 
     createHunter: function(x, y) {
         let hunter = this.ennemies.create(x, y, 'invader');
+        hunter.checkWorldBounds = true;
 
-        hunter.behaviour = (h) => {
-            if (!h.cooldown) {
-                h.cooldown = 0;
-            }
+        hunter.events.onEnterBounds.add((h) => {
+            console.log("HUNTER: entered bounds");
 
-            if (this.game.time.now > h.cooldown) {
-                h.cooldown = this.game.time.now + 300;
-                h.fired = true;
-                let bullet = this.enemyBullets.getFirstExists(false);
-                if (bullet) {
-                    let vx = this.player.body.x - h.body.x;
-                    let vy = this.player.body.y - h.body.y;
+            hunter.events.onOutOfBounds.add((h) => {
+                console.log("HUNTER: exiting bounds");
+                h.kill();
+            }, this);
 
-                    let angle = Math.atan2(vy, vx);
-
-                    vx = Math.cos(angle) * 400;
-                    vy = Math.sin(angle) * 400;
-
-                    bullet.reset(h.x, h.y);
-
-                    bullet.body.velocity.x = vx;
-                    bullet.body.velocity.y = vy;
+            hunter.behaviour = (h) => {
+                if (!h.cooldown) {
+                    h.cooldown = 0;
                 }
-            }
-        };
+
+                if (this.game.time.now > h.cooldown) {
+                    h.cooldown = this.game.time.now + 300;
+                    h.fired = true;
+                    let bullet = this.enemyBullets.getFirstExists(false);
+                    if (bullet) {
+                        let vx = this.player.body.x - h.body.x;
+                        let vy = this.player.body.y - h.body.y;
+
+                        let angle = Math.atan2(vy, vx);
+
+                        vx = Math.cos(angle) * 400;
+                        vy = Math.sin(angle) * 400;
+
+                        bullet.reset(h.x, h.y);
+
+                        bullet.body.velocity.x = vx;
+                        bullet.body.velocity.y = vy;
+                    }
+                }
+            };
+        }, this);
     },
 
-    createEnnemies: function () {
+    createEnemies: function () {
         this.createHunter(1000, 700);
     },
 
