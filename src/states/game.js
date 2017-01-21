@@ -43,11 +43,6 @@ gameState.prototype = {
         this.bullets = this.game.add.group();
         this.bullets.enableBody = true;
         this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-        this.bullets.createMultiple(30, 'fireball');
-        this.bullets.setAll('anchor.x', 0.5);
-        this.bullets.setAll('anchor.y', 1);
-        this.bullets.setAll('outOfBoundsKill', true);
-        this.bullets.setAll('checkWorldBounds', true);
 
         // The enemy's bullets
         let enemyBullets = this.game.add.group();
@@ -356,19 +351,19 @@ gameState.prototype = {
         angle = angle * Math.PI / 180;
 
         //  Grab the first bullet we can from the pool
-        this.bullet = this.bullets.getFirstExists(false);
+        let bullet = this.bullets.create(0, 0, animation);
 
-        if (this.bullet) {
-            this.bullet.animations.add(animation);
-            this.bullet.scale.setTo(1, 1);
+        if (bullet) {
+            bullet.animations.add(animation);
+            bullet.scale.setTo(1, 1);
             //  And fire it
-            this.bullet.reset(this.player.x, this.player.y + 8);
-            this.bullet.animations.play(animation, 10, true, false);
-            this.bullet.body.velocity.x = Math.cos(angle) * 400;
-            this.bullet.body.velocity.y = Math.sin(angle) * 400;
+            bullet.reset(this.player.x, this.player.y + 8);
+            bullet.animations.play(animation, 10, true, false);
+            bullet.body.velocity.x = Math.cos(angle) * 400;
+            bullet.body.velocity.y = Math.sin(angle) * 400;
             this.bulletTime = this.game.time.now + 100;
-            this.bullet.fireTime = this.game.time.now;
-            this.bullet.bulletUpdate = update;
+            bullet.fireTime = this.game.time.now;
+            bullet.bulletUpdate = update;
         }
     },
 
