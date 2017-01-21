@@ -157,8 +157,28 @@ gameState.prototype = {
         }, this);
     },
 
+    createChopper: function (x, y) {
+        let chopper = this.ennemies.create(x, y, 'invader');
+        chopper.checkWorldBounds = true;
+
+        chopper.events.onEnterBounds.add((h) => {
+            console.log("CHOPPER: entered bounds");
+
+            chopper.events.onOutOfBounds.add((h) => {
+                console.log("CHOPPER: exiting bounds");
+                h.kill();
+            }, this);
+
+            chopper.behaviour = (c) => {
+                c.body.velocity.x = -100;
+                c.body.velocity.y = Math.sin((this.game.time.now / 1000) * 2 * Math.PI * 1) * 600;
+            };
+        }, this);
+    },
+
     createEnemies: function () {
-        this.createHunter(1000, 700);
+        //this.createHunter(1300, 700);
+        this.createChopper(1300, 300);
     },
 
     setupInvader: function (invader) {
