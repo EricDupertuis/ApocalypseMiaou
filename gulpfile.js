@@ -39,6 +39,14 @@ gulp.task('build', null, function () {
     return bundlee();
 });
 
+gulp.task('serve', ['watch'], function () {
+    connect.server({
+        root: ['./'],
+        port: 9000,
+        livereload: true
+    });
+});
+
 gulp.task('watch', function () {
     watching = true;
     return gulp.watch(['./index.html', paths.js], ['build']);
