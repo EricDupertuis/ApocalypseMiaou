@@ -7,7 +7,7 @@ gameState.prototype = {
         this.bullets = null;
         this.bulletTime = 0;
         this.cursors = null;
-        this.fireButton = null;
+        this.mainGunButton = null;
         this.explosions = null;
         this.starfield = null;
         this.score = 0;
@@ -91,7 +91,8 @@ gameState.prototype = {
 
         //  And some controls to play the game with
         this.cursors = this.game.input.keyboard.createCursorKeys();
-        this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        this.mainGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        this.shockWaveButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
     },
 
     createPlayer: function() {
@@ -143,8 +144,9 @@ gameState.prototype = {
         this.backgroundGroup.x -= 2;
 
         this.bullets.forEachAlive(function(bullet) {
-            console.log(this.game.time.now - bullet.fireTime, bullet.fireTime);
-            bullet.scale.setTo(1, 1 + 10 * (this.game.time.now - bullet.fireTime) / 1000);
+            if (bullet.bulletUpdate) {
+                bullet.bulletUpdate(bullet);
+            }
         }, this);
 
         if (this.player.alive) {
@@ -163,9 +165,14 @@ gameState.prototype = {
                 this.player.body.velocity.y = 200;
             }
 
-            if (this.fireButton.isDown) {
-                this.fireBullet();
+            if (this.mainGunButton.isDown) {
+                this.fireBullet(null);
             }
+
+            if (this.shockWaveButton.isDown) {
+                this.fireBullet(this.updateShockwaveBullet);
+            }
+
 
             if (this.game.time.now > this.firingTimer) {
                 this.enemyFires();
@@ -255,7 +262,7 @@ gameState.prototype = {
         }
     },
 
-    fireBullet: function () {
+    fireBullet: function (update) {
          //  To avoid them being allowed to fire too fast we set a time limit
         if (this.game.time.now > this.bulletTime)
         {
@@ -264,13 +271,19 @@ gameState.prototype = {
 
             if (this.bullet)
             {
+                this.bullet.scale.setTo(1, 1);
                 //  And fire it
                 this.bullet.reset(this.player.x, this.player.y + 8);
                 this.bullet.body.velocity.x = 400;
                 this.bulletTime = this.game.time.now + 200;
                 this.bullet.fireTime = this.game.time.now;
+                this.bullet.bulletUpdate = update;
             }
         }
+    },
+
+    updateShockwaveBullet: function (bullet) {
+        bullet.scale.setTo(1, 1 + 10 * (this.game.time.now - bullet.fireTime) / 1000);
     },
 
     resetBullet: function (bullet) {
