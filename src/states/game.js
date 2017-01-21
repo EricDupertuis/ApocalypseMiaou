@@ -304,7 +304,7 @@ gameState.prototype = {
         if (this.game.scale.isFullScreen) {
             this.game.scale.stopFullScreen();
         } else {
-            this.game.scale.startFullScreen(false);
+            this.game.scale.startFullScreen(true);
         }
     }
 }
