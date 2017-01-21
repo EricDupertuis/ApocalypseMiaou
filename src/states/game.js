@@ -25,7 +25,7 @@ gameState.prototype = {
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 32, 32);
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
         this.game.load.image('lion', 'assets/prod/characters/lion.png');
-        this.game.load.spritesheet('kaboom', 'assets/example/explode.png', 128, 128);
+        this.game.load.spritesheet('kaboom', 'assets/prod/effects/explosion.png', 512, 512, 8);
         this.game.load.image('background', 'assets/prod/background.jpg');
     },
 
@@ -298,7 +298,7 @@ gameState.prototype = {
         //  And create an explosion :)
         let explosion = this.explosions.getFirstExists(false);
         explosion.reset(alien.body.x, alien.body.y);
-        explosion.play('kaboom', 30, false, true);
+        explosion.play('kaboom', 10, false, true);
 
         if (this.ennemies.countLiving() == 0) {
             this.score += 1000;

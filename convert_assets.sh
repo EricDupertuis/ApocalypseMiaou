@@ -12,3 +12,5 @@ cp $RAW/background.jpg $PROD/background.jpg
 convert $RAW/characters/lion.png -resize 75x50 $PROD/characters/lion.png
 
 convert $RAW/enemies/helicopter.png -resize 200x150 $PROD/enemies/helicopter.png
+
+convert $RAW/effects/explosion.png -resize 2048x1024 $PROD/effects/explosion.png
