@@ -116,6 +116,7 @@ gameState.prototype = {
         player.anchor.setTo(0.5, 0.5);
         player.body.collideWorldBounds = true;
         player.deathCooldown = 0;
+        player.body.setSize(30, 30, 100, 16);
 
         return player;
     },
@@ -211,8 +212,22 @@ gameState.prototype = {
     },
 
     createLevel: function () {
-        //this.createHunter(1300, 700);
-        this.createChopper(1300, 300);
+        let y = 60;
+        let x = 666;
+        /* TODO: bucheron */
+        this.createHunter(1 * x, 5 * y);
+        this.createHunter(1 * x, 8 * y);
+
+        this.createHunter(2 * x, 2 * y);
+        this.createHunter(2 * x, 10 * y);
+
+        this.createHunter(3 * x, 11 * y);
+
+        this.createHunter(4 * x, 6 * y);
+        this.createHunter(4 * x, 11 * y);
+
+        /* TODO: camion */
+        this.createHunter(5 * x, 11 * y);
     },
 
     setupInvader: function (invader) {
