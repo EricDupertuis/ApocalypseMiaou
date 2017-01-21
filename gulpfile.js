@@ -27,7 +27,7 @@ function scripts(watch) {
     });
 
     if(watch) {
-        bundler = watchify(bundler);
+        bundler = watchify(bundler, {poll: true});
         time = new Date().getTime() - start;
         util.log("[Watchify] rebundle took ", util.colors.cyan(`${time} ms`));
     }
