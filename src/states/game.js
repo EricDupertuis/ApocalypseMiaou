@@ -23,6 +23,7 @@ gameState.prototype = {
         this.game.load.image('bullet', 'assets/example/bullet.png');
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 32, 32);
+        this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
         this.game.load.image('lion', 'assets/prod/characters/lion.png');
         this.game.load.spritesheet('kaboom', 'assets/example/explode.png', 128, 128);
         this.game.load.image('background', 'assets/prod/background.jpg');
@@ -158,7 +159,7 @@ gameState.prototype = {
     },
 
     createChopper: function (x, y) {
-        let chopper = this.ennemies.create(x, y, 'invader');
+        let chopper = this.ennemies.create(x, y, 'chopper');
         chopper.checkWorldBounds = true;
 
         chopper.events.onEnterBounds.add((h) => {
@@ -170,8 +171,12 @@ gameState.prototype = {
             }, this);
 
             chopper.behaviour = (c) => {
+                let freq = 0.25;
+                let amplitude = 10;
+
                 c.body.velocity.x = -100;
-                c.body.velocity.y = Math.sin((this.game.time.now / 1000) * 2 * Math.PI * 1) * 600;
+                c.body.velocity.y = Math.sin((this.game.time.now / 1000) * 2 * Math.PI * freq) * amplitude;
+
 
                 if (!c.cooldown) {
                     c.cooldown = 0;
