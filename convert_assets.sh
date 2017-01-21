@@ -1,8 +1,12 @@
 #!/usr/bin/env fish
 
-for img in (find raw_assets/cards/ -name "*.png")
-    set dst (echo $img | sed "s/raw_assets\/cards/assets\/cards/")
-    echo "Converting $img"
+set RAW assets/raw
+set PROD assets/prod
 
-    convert $img -resize 750x1000 $dst
-end
+mkdir -p $RAW $PROD
+
+# Background image
+
+cp $RAW/background.jpg $PROD/background.jpg
+
+convert $RAW/characters/lion.png -resize 75x50 $PROD/characters/lion.png
