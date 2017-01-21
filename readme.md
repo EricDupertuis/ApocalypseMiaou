@@ -12,9 +12,17 @@ first install the gulp-cli
     npm install -g gulp-cli
 
 To install all the needed packages, run :
-    
+
     npm install
-    
-To package everything and run browserSync, use the default Gulp task
+
+To package everything use the default Gulp task:
 
     gulp
+
+To run a dev server (disables every cache), runs the following commands:
+
+    docker built -t phaser docker/
+    docker run -v $(pwd):/data -p 80:80 phaser
+
+Tadaa, it will be available under localhost if you use docker or your `docker-machine ip` if you use Docker Machine.
+
