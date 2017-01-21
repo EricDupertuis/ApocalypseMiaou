@@ -144,7 +144,6 @@ gameState.prototype = {
 
         this.bullets.forEachAlive(function(bullet) {
             console.log(this.game.time.now - bullet.fireTime, bullet.fireTime);
-            bullet.
             bullet.scale.setTo(1, 1 + 10 * (this.game.time.now - bullet.fireTime) / 1000);
         }, this);
 
