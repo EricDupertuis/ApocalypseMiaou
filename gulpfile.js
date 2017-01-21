@@ -1,100 +1,62 @@
-"use strict";
-
-const browserify = require("browserify");
-const buffer       = require("vinyl-buffer");
-const gulp         = require("gulp");
-const path         = require("path");
+const gulp         = require('gulp');
+const eslint       = require('gulp-eslint');
 const plumber      = require('gulp-plumber');
-const source       = require("vinyl-source-stream");
-const util         = require("gulp-util");
-const watchify     = require("watchify");
-const browserSync = require('browser-sync');
-const sourcemaps = require('gulp-sourcemaps');
+const browserify = require('browserify');
+const babelify = require('babelify');
+const source = require('vinyl-source-stream');
+const watchify = require('watchify');
+const util = require('gulp-util');
 
-const src = {
-    js:     ["./src/app.js"]
-};
-const dest = {
-    js:     "./dist/"
-};
+const DIST = 'dist/';
+const SRC = 'src/';
 
-let bundlers;
+let production = process.env.NODE_ENV === 'production';
 
-function bundles(profile) {
+function scripts(watch) {
+    util.log(util.colors.cyan('Much script, so build, wow'));
+
+    let bundler, rebundle;
     let start = new Date().getTime();
 
-    if (bundlers === undefined) {
-        let opts = {},
-            presets = ["babel-preset-es2015"];
+    bundler = browserify(SRC + 'app.js', {
+        basedir: __dirname,
+        debug: !production,
+        cache: {}, // required for watchify
+        packageCache: {}, // required for watchify
+        fullPaths: watch // required to be true only for watchify
+    });
 
-        if (profile == "prod") {
-            opts.debug = false;
-            presets.push("es2015");
-        } else {
-            opts.debug = true;
-        }
-
-        bundlers = {};
-
-        for (let index in src.js) {
-            opts.standalone = "$";
-
-            switch (profile) {
-                case "watch":
-                    bundlers[src.js[index]] = watchify(browserify(src.js[index], opts)).transform("babelify", {presets: presets});
-                    break;
-
-                case "dev":
-                    bundlers[src.js[index]] = browserify(src.js[index], opts).transform("babelify", {presets: presets});
-                    break;
-
-                case "prod":
-                    bundlers[src.js[index]] = browserify(src.js[index], opts)
-                        .transform("babelify", {presets: presets})
-                        .transform({
-                            global: true
-                        }, "uglifyify");
-                    break;
-            }
-        }
-    }
-
-    for (let file in bundlers) {
-        bundle(file);
-    }
-}
-
-function bundle(file) {
-    let start = new Date().getTime(),
-        _ = bundlers[file]
-            .bundle()
-            .on("error", util.log.bind(util, "Browserify Error"))
-            .pipe(source(`${path.parse(file).name}.js`))
-            .pipe(buffer())
-            .pipe(sourcemaps.init({ loadMaps: true }))
-            .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest(dest.js)),
+    if(watch) {
+        bundler = watchify(bundler);
         time = new Date().getTime() - start;
-    util.log("[browserify] rebundle took ", util.colors.cyan(`${time} ms`), util.colors.grey(`(${file})`));
+        util.log("[Watchify] rebundle took ", util.colors.cyan(`${time} ms`));
+    }
 
-    return _;
+    bundler.transform('babelify', {presets: ['babel-preset-es2015']})
+
+    rebundle = function() {
+        let stream = bundler.bundle();
+        stream = stream.pipe(source('app.js'));
+        return stream.pipe(gulp.dest(DIST));
+    };
+
+    bundler.on('update', rebundle);
+    return rebundle();
 }
 
-gulp.task("js:dev", bundles.bind(null, "dev"));
-gulp.task("js:prod", bundles.bind(null, "prod"));
-
-
-gulp.task("watch", function () {
-    bundles("watch");
-
-    for (let file in bundlers) {
-        bundlers[file].on("update", bundle.bind(null, file));
-    }
+gulp.task('build', function () {
+    return browserify({entries: SRC + 'app.js', debug: true})
+        .transform('babelify', {presets: ['babel-preset-es2015']})
+        .bundle()
+        .pipe(plumber())
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest(DIST));
 });
 
-gulp.task("dev", ["js:dev"]);
-gulp.task("prod", ["js:prod"]);
+gulp.task('scripts', function() {
+    return scripts(false);
+});
 
-gulp.task("default", ["watch", "dev"], function () {
-
+gulp.task('default', function() {
+    return scripts(true);
 });
