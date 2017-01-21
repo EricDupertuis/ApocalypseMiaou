@@ -23,7 +23,7 @@ gameState.prototype = {
         this.game.load.image('bullet', 'assets/example/bullet.png');
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 32, 32);
-        this.game.load.image('ship', 'assets/example/player.png');
+        this.game.load.image('lion', 'assets/characters/lion_1.png');
         this.game.load.spritesheet('kaboom', 'assets/example/explode.png', 128, 128);
         this.game.load.image('starfield', 'assets/example/starfield.png');
     },
@@ -78,10 +78,10 @@ gameState.prototype = {
 
         for (let i = 0; i < 3; i++)
         {
-            let ship = this.lives.create(this.game.world.width - 100 + (30 * i), 60, 'ship');
-            ship.anchor.setTo(0.5, 0.5);
-            ship.angle = 90;
-            ship.alpha = 0.4;
+            let lion = this.lives.create(this.game.world.width - 100 + (30 * i), 60, 'lion');
+            lion.anchor.setTo(0.5, 0.5);
+            lion.angle = 90;
+            lion.alpha = 0.4;
         }
 
         //  An explosion pool
@@ -97,7 +97,7 @@ gameState.prototype = {
     },
 
     createPlayer: function() {
-        let player = this.game.add.sprite(400, 500, 'ship');
+        let player = this.game.add.sprite(400, 500, 'lion');
         this.game.physics.enable(player, Phaser.Physics.ARCADE);
         player.physicsBodyType = Phaser.Physics.ARCADE;
         player.enableBody = true;
@@ -294,9 +294,7 @@ gameState.prototype = {
     updateWaveBullet: function (bullet) {
         let angle = 2 * 1 * Math.PI * (this.game.time.now - bullet.fireTime) / 1000;
         let vel =  500 * Math.sin(angle);
-        console.log(vel);
         bullet.body.velocity.y = vel;
-
     },
 
     resetBullet: function (bullet) {
