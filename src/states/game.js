@@ -162,34 +162,47 @@ gameState.prototype = {
         let chopper = this.ennemies.create(x, y, 'chopper');
         chopper.checkWorldBounds = true;
 
-        chopper.events.onEnterBounds.add((h) => {
+        chopper.events.onEnterBounds.add((c) => {
             console.log("CHOPPER: entered bounds");
+            c.roundsLeft = 0;
 
-            chopper.events.onOutOfBounds.add((h) => {
+            chopper.events.onOutOfBounds.add((c) => {
                 console.log("CHOPPER: exiting bounds");
-                h.kill();
+                c.kill();
             }, this);
 
             chopper.behaviour = (c) => {
                 let freq = 0.25;
-                let amplitude = 10;
+                let amplitude = 400;
 
                 c.body.velocity.x = -100;
                 c.body.velocity.y = Math.sin((this.game.time.now / 1000) * 2 * Math.PI * freq) * amplitude;
-
 
                 if (!c.cooldown) {
                     c.cooldown = 0;
                 }
 
-                if (this.game.time.now > c.cooldown) {
-                    c.cooldown = this.game.time.now + 300;
+                if (!c.burstCooldown) {
+                    c.burstCooldown = this.game.time.now;
+                }
+
+                if (this.game.time.now > c.burstCooldown && c.roundsLeft == 0) {
+                    console.log("Reloaded");
+                    c.burstCooldown = this.game.time.now + 800;
+                    c.roundsLeft = 3;
+                }
+
+                if (this.game.time.now > c.cooldown && c.roundsLeft > 0) {
+                    c.cooldown = this.game.time.now + 100;
                     c.fired = true;
+
                     let bullet = this.enemyBullets.getFirstExists(false);
+
                     if (bullet) {
                         bullet.reset(c.x, c.y);
-                        bullet.body.velocity.x = -300;
+                        bullet.body.velocity.x = -1000;
                     }
+                    c.roundsLeft--;
                 }
             };
         }, this);
