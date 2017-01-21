@@ -95,19 +95,18 @@ gameState.prototype = {
 
         //  And some controls to play the game with
         this.cursors = this.game.input.keyboard.createCursorKeys();
-        this.mainGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-        this.shockWaveButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
-        this.waveGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
-        this.threeShotButton = this.game.input.keyboard.addKey(Phaser.Keyboard.E);
+
         this.slowDownButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+
+        this.mainGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
+        this.secondGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
 
         this.swapButton = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
         this.swapButton.onDown.add(this.swapCharacter, this);
 
-        this.mainGunButton.cooldown = 0;
-        this.shockWaveButton.cooldown = 0;
-        this.waveGunButton.cooldown = 0;
-        this.threeShotButton.cooldown = 0;
+        this.missileCooldown = 0;
+        this.waveCooldown = 0;
+        this.flameCooldown = 0;
 
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.game.input.onDown.add(this.goFullScreen, this);
@@ -391,41 +390,36 @@ gameState.prototype = {
                 }
             }
 
-            if (this.mainGunButton.isDown) {
-                if (this.game.time.now > this.mainGunButton.cooldown) {
-                    this.fireBullet(null, 0, 'missile');
-                    this.mainGunButton.cooldown = this.game.time.now + 200;
+
+            if (this.player.alternateCharacter == false) {
+                if (this.mainGunButton.isDown) {
+                    if (this.game.time.now > this.missileCooldown) {
+                        this.fireBullet(null, 0, 'missile');
+                        this.missileCooldown = this.game.time.now + 200;
+                    }
+                } else if (this.secondGunButton.isDown) {
+                    if (this.game.time.now > this.flameCooldown) {
+                        this.fireBullet((b) => {
+                            b.scale.setTo(1, 1 + 10 * (this.game.time.now - b.fireTime) / 1000);
+                        }, 0, 'fireball');
+                        this.flameCooldown = this.game.time.now + 3000;
+                    }
+                }
+            } else {
+                if (this.mainGunButton.isDown) {
+                    if (this.game.time.now > this.waveCooldown) {
+                        this.fireBullet((b) => {
+                            let angle = 2 * 1 * Math.PI * (this.game.time.now - b.fireTime) / 1000;
+                            let vel = 500 * Math.sin(angle);
+                            b.body.velocity.y = vel;
+                        }, 0, 'ice');
+                        this.waveCooldown = this.game.time.now + 200;
+                    }
+                } else if (this.secondGunButton.isDown) {
+                    // TODO: Shield
                 }
             }
 
-            if (this.waveGunButton.isDown) {
-                if (this.game.time.now > this.waveGunButton.cooldown) {
-                    this.fireBullet((b) => {
-                        let angle = 2 * 1 * Math.PI * (this.game.time.now - b.fireTime) / 1000;
-                        let vel = 500 * Math.sin(angle);
-                        b.body.velocity.y = vel;
-                    }, 0, 'ice');
-                    this.waveGunButton.cooldown = this.game.time.now + 200;
-                }
-            }
-
-            if (this.shockWaveButton.isDown) {
-                if (this.game.time.now > this.shockWaveButton.cooldown) {
-                    this.fireBullet((b) => {
-                        b.scale.setTo(1, 1 + 10 * (this.game.time.now - b.fireTime) / 1000);
-                    }, 0, 'fireball');
-                    this.shockWaveButton.cooldown = this.game.time.now + 200;
-                }
-            }
-
-            if (this.threeShotButton.isDown) {
-                if (this.game.time.now > this.threeShotButton.cooldown) {
-                    this.fireBullet(null, 45, 'fireball');
-                    this.fireBullet(null, 0, 'fireball');
-                    this.fireBullet(null, -45, 'fireball');
-                    this.threeShotButton.cooldown = this.game.time.now + 200;
-                }
-            }
 
             //  Run collision
             this.game.physics.arcade.overlap(this.bullets, this.ennemies, this.collisionHandler, null, this);
