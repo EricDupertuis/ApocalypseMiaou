@@ -294,8 +294,7 @@ gameState.prototype = {
     resetBullet: function (bullet) {
         //  Called if the bullet goes out of the screen
         bullet.kill();
-    },
-
+    }
 }
 
 module.exports = gameState;
