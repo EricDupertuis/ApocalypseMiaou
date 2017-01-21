@@ -172,6 +172,20 @@ gameState.prototype = {
             chopper.behaviour = (c) => {
                 c.body.velocity.x = -100;
                 c.body.velocity.y = Math.sin((this.game.time.now / 1000) * 2 * Math.PI * 1) * 600;
+
+                if (!c.cooldown) {
+                    c.cooldown = 0;
+                }
+
+                if (this.game.time.now > c.cooldown) {
+                    c.cooldown = this.game.time.now + 300;
+                    c.fired = true;
+                    let bullet = this.enemyBullets.getFirstExists(false);
+                    if (bullet) {
+                        bullet.reset(c.x, c.y);
+                        bullet.body.velocity.x = -300;
+                    }
+                }
             };
         }, this);
     },
