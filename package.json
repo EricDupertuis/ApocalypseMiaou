@@ -3,24 +3,39 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "",
   "license": "MIT",
+  "devDependencies": {
+    "bower": "*",
+    "gulp": "*",
+    "gulp-util": "*",
+    "del": "*",
+    "gulp-concat": "*",
+    "gulp-download": "*",
+    "gulp-rename": "*",
+    "gulp-minify-css": "*",
+    "gulp-minify-html": "*",
+    "gulp-processhtml": "*",
+    "gulp-jshint": "*",
+    "gulp-uglify": "*",
+    "gulp-connect": "*",
+    "gulp-watch": "*",
+    "jshint": "^2.9.1",
+    "browserify": "*",
+    "tiny-lr": "*",
+    "vinyl-source-stream": "*",
+    "gulp-streamify": "*",
+    "watchify": "*",
+    "gulp-if": "*",
+    "vinyl-paths": "*",
+    "phaser": "*"
+  },
+  "scripts": {
+    "start": "node ./node_modules/gulp/bin/gulp.js",
+    "build": "node ./node_modules/gulp/bin/gulp.js build"
+  },
   "dependencies": {
-    "babel-preset-es2015": "^6.18.0",
-    "babelify": "^7.3.0",
-    "browser-sync": "^2.18.6",
-    "browserify": "^13.3.0",
-    "gulp": "^3.9.1",
-    "gulp-eslint": "^3.0.1",
-    "gulp-plumber": "^1.1.0",
-    "gulp-sourcemaps": "^2.4.0",
-    "gulp-util": "^3.0.8",
-    "phaser": "^2.6.2",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.8.0"
+    "babel-preset-es2015": "^6.22.0",
+    "babelify": "^7.3.0"
   }
 }

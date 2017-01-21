@@ -1,100 +1,56 @@
-"use strict";
+var gulp = require('gulp')
+    , gutil = require('gulp-util')
+    , del = require('del')
+    , rename = require('gulp-rename')
+    , jshint = require('gulp-jshint')
+    , streamify = require('gulp-streamify')
+    , uglify = require('gulp-uglify')
+    , connect = require('gulp-connect')
+    , source = require('vinyl-source-stream')
+    , babelify = require('babelify')
+    , browserify = require('browserify')
+    , watchify = require('watchify')
+    , gulpif = require('gulp-if')
+    , paths;
 
-const browserify = require("browserify");
-const buffer       = require("vinyl-buffer");
-const gulp         = require("gulp");
-const path         = require("path");
-const plumber      = require('gulp-plumber');
-const source       = require("vinyl-source-stream");
-const util         = require("gulp-util");
-const watchify     = require("watchify");
-const browserSync = require('browser-sync');
-const sourcemaps = require('gulp-sourcemaps');
+var watching = true;
 
-const src = {
-    js:     ["./src/app.js"]
+paths = {
+    js:     ['src/*.js', 'src/**/*.js'],
+    entry: './src/app.js',
+    dist:   './dist/'
 };
-const dest = {
-    js:     "./dist/"
-};
 
-let bundlers;
+gulp.task('build', null, function () {
+    let bundler = watchify(browserify({
+        cache: {}, packageCache: {}, fullPaths: true,
+        entries: [paths.entry],
+        debug: watching
+    }));
 
-function bundles(profile) {
-    let start = new Date().getTime();
-
-    if (bundlers === undefined) {
-        let opts = {},
-            presets = ["babel-preset-es2015"];
-
-        if (profile == "prod") {
-            opts.debug = false;
-            presets.push("es2015");
-        } else {
-            opts.debug = true;
-        }
-
-        bundlers = {};
-
-        for (let index in src.js) {
-            opts.standalone = "$";
-
-            switch (profile) {
-                case "watch":
-                    bundlers[src.js[index]] = watchify(browserify(src.js[index], opts), {poll: true}).transform("babelify", {presets: presets});
-                    break;
-
-                case "dev":
-                    bundlers[src.js[index]] = browserify(src.js[index], opts).transform("babelify", {presets: presets});
-                    break;
-
-                case "prod":
-                    bundlers[src.js[index]] = browserify(src.js[index], opts)
-                        .transform("babelify", {presets: presets})
-                        .transform({
-                            global: true
-                        }, "uglifyify");
-                    break;
-            }
-        }
-    }
-
-    for (let file in bundlers) {
-        bundle(file);
-    }
-}
-
-function bundle(file) {
-    let start = new Date().getTime(),
-        _ = bundlers[file]
+    let bundlee = function() {
+        return bundler
+            .transform('babelify', {presets: ['babel-preset-es2015']})
             .bundle()
-            .on("error", util.log.bind(util, "Browserify Error"))
-            .pipe(source(`${path.parse(file).name}.js`))
-            .pipe(buffer())
-            .pipe(sourcemaps.init({ loadMaps: true }))
-            .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest(dest.js)),
-        time = new Date().getTime() - start;
-    util.log("[browserify] rebundle took ", util.colors.cyan(`${time} ms`), util.colors.grey(`(${file})`));
+            .pipe(source('app.js'))
+            .pipe(gulp.dest(paths.dist))
+            .on('error', gutil.log);
+    };
 
-    return _;
-}
-
-gulp.task("js:dev", bundles.bind(null, "dev"));
-gulp.task("js:prod", bundles.bind(null, "prod"));
-
-
-gulp.task("watch", function () {
-    bundles("watch");
-
-    for (let file in bundlers) {
-        bundlers[file].on("update", bundle.bind(null, file));
-    }
+    return bundlee();
 });
 
-gulp.task("dev", ["js:dev"]);
-gulp.task("prod", ["js:prod"]);
-
-gulp.task("default", ["watch", "dev"], function () {
-
+gulp.task('connect', function () {
+    connect.server({
+        root: ['./'],
+        port: 9000,
+        livereload: true
+    });
 });
+
+gulp.task('watch', function () {
+    watching = true;
+    return gulp.watch(['./index.html', paths.js], ['build']);
+});
+
+gulp.task('default', ['connect', 'watch', 'build']);
