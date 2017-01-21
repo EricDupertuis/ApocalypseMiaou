@@ -28,7 +28,10 @@ gameState.prototype = {
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
         this.game.load.image('lion', 'assets/prod/characters/lion.png');
-        this.game.load.image('background', 'assets/prod/background.png');
+
+        for (let i=1;i<=5; i++) {
+            this.game.load.image('background' + i, 'assets/prod/background' + i + '.png');
+        }
     },
 
     create: function () {
@@ -37,7 +40,9 @@ gameState.prototype = {
         this.backgroundGroup = this.game.add.group();
 
         // background image
-        this.background = this.backgroundGroup.create(0, 0, 'background');
+        for (let i=1; i<5; i++) {
+            this.backgroundGroup.create(5333 * (i - 1), 0, 'background' + i);
+        }
 
         //  Our bullet group
         this.bullets = this.game.add.group();
@@ -65,7 +70,7 @@ gameState.prototype = {
         this.ennemies.enableBody = true;
         this.ennemies.physicsBodyType = Phaser.Physics.ARCADE;
 
-        this.createEnemies();
+        this.createLevel();
 
         //  The score
         this.scoreString = 'Score : ';
@@ -205,7 +210,7 @@ gameState.prototype = {
         }, this);
     },
 
-    createEnemies: function () {
+    createLevel: function () {
         //this.createHunter(1300, 700);
         this.createChopper(1300, 300);
     },

@@ -1,0 +1,22 @@
+base_folder: assets/raw/level_tiles
+output: assets/prod/background4.png
+height: 720 # pixels
+
+tiles:
+  #first part
+  - fg: arbre_1_hiver.png
+    bg: ciel_2.png
+  - fg: arbre_2_hiver.png
+    bg: ciel_2.png
+  - fg: arbre_3_hiver.png
+    bg: ciel_2.png
+  - fg: arbre_1_hiver.png
+    bg: ciel_2.png
+  - fg: arbre_2_hiver.png
+    bg: ciel_2.png
+  - fg: arbre_3_hiver.png
+    bg: ciel_2.png
+  - fg: arbre_1_hiver.png
+    bg: ciel_2.png
+  - fg: arbre_2_hiver.png
+    bg: ciel_2.png
