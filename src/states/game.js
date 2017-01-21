@@ -99,6 +99,7 @@ gameState.prototype = {
         this.shockWaveButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
         this.waveGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
         this.threeShotButton = this.game.input.keyboard.addKey(Phaser.Keyboard.E);
+        this.slowDownButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
 
         this.swapButton = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
         this.swapButton.onDown.add(this.swapCharacter, this);
@@ -284,8 +285,10 @@ gameState.prototype = {
 
         this.createLumberjack(1 * x, 5 * y);
         this.createLumberjack(1.2 * x, 5 * y);
-        this.createLumberjack(4 * x, 6 * y);
+        this.createLumberjack(3 * x, 6 * y);
         this.createLumberjack(3 * x, 7 * y);
+        this.createLumberjack(4 * x, 6 * y);
+        this.createLumberjack(4 * x, 7 * y);
 /*
         this.createHunter(2 * x, 2 * y);
         this.createHunter(2 * x, 10 * y);
@@ -299,9 +302,11 @@ gameState.prototype = {
 
         this.createMeteor(1.5 * x, -2.5 * y);
 
-        this.createChopper(3 * x, 8 * y);
-        this.createChopper(4 * x, 9 * y);
-        this.createChopper(5 * x, 10 * y);
+        this.createChopper(3 * x, 5 * y);
+        this.createChopper(4 * x, 5 * y);
+        this.createChopper(5 * x, 5 * y);
+        this.createChopper(6 * x, 5 * y);
+        this.createChopper(7 * x, 5 * y);
     },
 
     setupInvader: function (invader) {
@@ -353,17 +358,37 @@ gameState.prototype = {
 
             let max_speed = 500;
 
+            if (this.slowDownButton.isDown) {
+            }
+
             if (this.cursors.left.isDown) {
-                this.player.body.velocity.x = -max_speed;
+                if (this.slowDownButton.isDown) {
+                    this.player.body.velocity.x = -max_speed / 2;
+                } else {
+                    this.player.body.velocity.x = -max_speed;
+                }
             } else if (this.cursors.right.isDown) {
                 this.player.moving = true;
-                this.player.body.velocity.x = max_speed;
+
+                if (this.slowDownButton.isDown) {
+                    this.player.body.velocity.x = max_speed / 2;
+                } else {
+                    this.player.body.velocity.x = max_speed;
+                }
             }
 
             if (this.cursors.up.isDown) {
-                this.player.body.velocity.y = -max_speed;
+                if (this.slowDownButton.isDown) {
+                    this.player.body.velocity.y = -max_speed / 2;
+                } else {
+                    this.player.body.velocity.y = -max_speed;
+                }
             } else if (this.cursors.down.isDown) {
-                this.player.body.velocity.y = max_speed;
+                if (this.slowDownButton.isDown) {
+                    this.player.body.velocity.y = max_speed / 2;
+                } else {
+                    this.player.body.velocity.y = max_speed;
+                }
             }
 
             if (this.mainGunButton.isDown) {
