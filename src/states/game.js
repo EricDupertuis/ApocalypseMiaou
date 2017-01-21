@@ -70,7 +70,7 @@ gameState.prototype = {
         this.ennemies.enableBody = true;
         this.ennemies.physicsBodyType = Phaser.Physics.ARCADE;
 
-        //this.createLevel();
+        this.createLevel();
 
         //  The score
         this.scoreString = 'Score : ';
