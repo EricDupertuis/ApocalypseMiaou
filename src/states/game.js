@@ -28,7 +28,7 @@ gameState.prototype = {
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
         this.game.load.image('lion', 'assets/prod/characters/lion.png');
-        this.game.load.image('background', 'assets/prod/background.jpg');
+        this.game.load.image('background', 'assets/prod/background.png');
     },
 
     create: function () {
