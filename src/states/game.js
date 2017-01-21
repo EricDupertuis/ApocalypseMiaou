@@ -21,7 +21,7 @@ gameState.prototype = {
 
     preload: function () {
         this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 53, 32);
-        this.game.load.spritesheet('missile', 'assets/prod/effects/missile.png', 108, 36);
+        this.game.load.spritesheet('missile', 'assets/prod/effects/missile.png', 165, 36);
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 32, 32);
         this.game.load.spritesheet('kaboom', 'assets/prod/effects/explosion.png', 512, 512, 8);
 
@@ -359,7 +359,7 @@ gameState.prototype = {
         this.bullet = this.bullets.getFirstExists(false);
 
         if (this.bullet) {
-            this.bullet.animations.add('fireball');
+            this.bullet.animations.add(animation);
             this.bullet.scale.setTo(1, 1);
             //  And fire it
             this.bullet.reset(this.player.x, this.player.y + 8);
@@ -370,7 +370,6 @@ gameState.prototype = {
             this.bullet.fireTime = this.game.time.now;
             this.bullet.bulletUpdate = update;
         }
-
     },
 
 
