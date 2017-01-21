@@ -25,7 +25,7 @@ gameState.prototype = {
 
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
-        this.game.load.spritesheet('lion', 'assets/prod/characters/lion.png', 139, 100, 5);
+        this.game.load.spritesheet('characters', 'assets/prod/characters/combined.png', 139, 100, 11);
 
         for (let i=1;i<=5; i++) {
             this.game.load.image('background' + i, 'assets/prod/background' + i + '.png');
@@ -97,6 +97,9 @@ gameState.prototype = {
         this.waveGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
         this.threeShotButton = this.game.input.keyboard.addKey(Phaser.Keyboard.E);
 
+        this.swapButton = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+        this.swapButton.onDown.add(this.swapCharacter, this);
+
         this.mainGunButton.cooldown = 0;
         this.shockWaveButton.cooldown = 0;
         this.waveGunButton.cooldown = 0;
@@ -107,40 +110,51 @@ gameState.prototype = {
     },
 
     createPlayer: function () {
-        let player = this.game.add.sprite(400, 500, 'lion');
+        let player = this.game.add.sprite(400, 500, 'characters');
         player.moving = false;
+        player.alternateCharacter = false;
         this.game.physics.enable(player, Phaser.Physics.ARCADE);
 
         let updateAnimation = (sprite, animation) => {
-            if (animation.name == 'halt') {
-                if (sprite.moving) {
-                    sprite.animations.play('accelerate');
+            console.log(sprite.alternateCharacter);
+            console.log(sprite.alternateCharacter);
+            if (sprite.alternateCharacter == false) {
+                let animation_name = animation.name.replace("alternate_", "");
+
+                if (animation_name == 'halt') {
+                    if (sprite.moving) {
+                        sprite.animations.play('accelerate');
+                    }
+                } else if (animation_name == 'accelerate') {
+                    if (sprite.moving) {
+                        sprite.animations.play('fly');
+                    } else {
+                        sprite.animations.play('break');
+                    }
+                } else if (animation_name == 'fly') {
+                    if (!sprite.moving) {
+                        sprite.animations.play('break');
+                    }
+                } else if (animation_name == 'break') {
+                   if (sprite.moving) {
+                        sprite.animations.play('accelerate');
+                    } else {
+                        sprite.animations.play('halt');
+                    }
                 }
-            } else if (animation.name == 'accelerate') {
-                if (sprite.moving) {
-                    sprite.animations.play('fly');
-                } else {
-                    sprite.animations.play('break');
-                }
-            } else if (animation.name == 'fly') {
-                if (!sprite.moving) {
-                    sprite.animations.play('break');
-                }
-            } else if (animation.name == 'break') {
-               if (sprite.moving) {
-                    sprite.animations.play('accelerate');
-                } else {
-                    sprite.animations.play('halt');
-                }
+            } else {
+                sprite.animations.play('alternate_fly');
             }
         };
 
         player.animations.add('fly', [3, 4], 16, true).onLoop.add(updateAnimation);
         player.animations.add('halt', [0], 16, true).onLoop.add(updateAnimation);
         player.animations.add('accelerate', [0, 1, 2, 3, 4], 16, false).onComplete.add(updateAnimation);
-        player.animations.add('break', [4, 3, 2, 1, 0], 16, false).onComplete.add(updateAnimation);;
+        player.animations.add('break', [4, 3, 2, 1, 0], 16, false).onComplete.add(updateAnimation);
+        player.animations.add('alternate_fly', [10], 16, true).onLoop.add(updateAnimation);;
 
-        player.animations.play('fly');
+        /* Now do the same for the alternate skin. */
+        player.animations.play('alternate_fly');
 
         player.physicsBodyType = Phaser.Physics.ARCADE;
         player.enableBody = true;
@@ -273,6 +287,10 @@ gameState.prototype = {
 
     moveLeft: function () {
         this.ennemies.x -= 10;
+    },
+
+    swapCharacter: function() {
+        this.player.alternateCharacter = !this.player.alternateCharacter;
     },
 
     update: function () {
