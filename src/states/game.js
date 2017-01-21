@@ -64,6 +64,7 @@ gameState.prototype = {
         //  The baddies!
         let ennemies = this.game.add.group();
         this.ennemies = this.backgroundGroup.add(ennemies);
+
         this.ennemies.enableBody = true;
         this.ennemies.physicsBodyType = Phaser.Physics.ARCADE;
 
@@ -121,8 +122,26 @@ gameState.prototype = {
 
     createHunter: function(x, y) {
         let hunter = this.ennemies.create(x, y, 'invader');
+        hunter.checkWorldBounds = true;
+
+        hunter.events.onEnterBounds.add((h) => {
+            console.log("Hunter: entered bounds");
+            h.onScreen = true;
+        }, this);
+
+        hunter.events.onOutOfBounds.add((h) => {
+            if (h.onScreen) {
+                console.log("Hunter: exiting bounds");
+                h.kill();
+            }
+        }, this);
 
         hunter.behaviour = (h) => {
+
+            if (!h.onScreen) {
+                return;
+            }
+
             if (!h.cooldown) {
                 h.cooldown = 0;
             }
@@ -150,7 +169,7 @@ gameState.prototype = {
     },
 
     createennemies: function () {
-        this.createHunter(1000, 700);
+        this.createHunter(1300, 700);
     },
 
     setupInvader: function (invader) {
