@@ -101,7 +101,7 @@ gameState.prototype = {
         this.mainGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
         this.secondGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
 
-        this.swapButton = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+        this.swapButton = this.game.input.keyboard.addKey(Phaser.Keyboard.E);
         this.swapButton.onDown.add(this.swapCharacter, this);
 
         this.missileCooldown = 0;
