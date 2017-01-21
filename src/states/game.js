@@ -4,7 +4,7 @@ let gameState = (game) => {
 gameState.prototype = {
     init: function () {
         this.player = null;
-        this.aliens = null;
+        this.ennemies = null;
         this.bullets = null;
         this.bulletTime = 0;
         this.cursors = null;
@@ -48,7 +48,8 @@ gameState.prototype = {
         this.bullets.setAll('checkWorldBounds', true);
 
         // The enemy's bullets
-        this.enemyBullets = this.game.add.group();
+        let enemyBullets = this.game.add.group();
+        this.enemyBullets = this.backgroundGroup.add(enemyBullets);
         this.enemyBullets.enableBody = true;
         this.enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
         this.enemyBullets.createMultiple(30, 'enemyBullet');
@@ -61,12 +62,12 @@ gameState.prototype = {
         this.game.camera.follow(this.player);
 
         //  The baddies!
-        let aliens = this.game.add.group();
-        this.aliens = this.backgroundGroup.add(aliens);
-        this.aliens.enableBody = true;
-        this.aliens.physicsBodyType = Phaser.Physics.ARCADE;
+        let ennemies = this.game.add.group();
+        this.ennemies = this.backgroundGroup.add(ennemies);
+        this.ennemies.enableBody = true;
+        this.ennemies.physicsBodyType = Phaser.Physics.ARCADE;
 
-        this.createAliens();
+        this.createennemies();
 
         //  The score
         this.scoreString = 'Score : ';
@@ -118,25 +119,32 @@ gameState.prototype = {
         return player;
     },
 
-    createAliens: function () {
-        for (let y = 0; y < 10; y++) {
-            for (let x = 0; x < 4; x++) {
-                let alien = this.aliens.create(x * 48, y * 50, 'invader');
-                alien.anchor.setTo(0.5, 0.5);
-                alien.animations.add('fly', [0, 1, 2, 3], 20, true);
-                alien.play('fly');
-                alien.body.moves = false;
+    createHunter: function(x, y) {
+        let hunter = this.ennemies.create(x, y, 'invader');
+
+        hunter.behaviour = (h) => {
+            if (!h.cooldown) {
+                h.cooldown = 0;
             }
-        }
 
-        this.aliens.x = 500;
-        this.aliens.y = 50;
+            if (this.game.time.now > h.cooldown) {
+                h.cooldown = this.game.time.now + 750;
+                h.fired = true;
+                let bullet = this.enemyBullets.getFirstExists(false);
+                if (bullet) {
+                    let vx = this.player.x - h.x;
+                    let vy = this.player.y - h.y;
 
-        //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
-        let tween = this.game.add.tween(this.aliens).to({y: 200}, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+                    bullet.reset(h.body.x, h.body.y);
+                    bullet.body.velocity.x = vx;
+                    bullet.body.velocity.y = vy;
+                }
+            }
+        };
+    },
 
-        //  When the tween loops it calls descend
-        tween.onLoop.add(this.moveLeft, this);
+    createennemies: function () {
+        this.createHunter(1000, 700);
     },
 
     setupInvader: function (invader) {
@@ -146,7 +154,7 @@ gameState.prototype = {
     },
 
     moveLeft: function () {
-        this.aliens.x -= 10;
+        this.ennemies.x -= 10;
     },
 
     update: function () {
@@ -155,6 +163,12 @@ gameState.prototype = {
         this.bullets.forEachAlive(function (bullet) {
             if (bullet.bulletUpdate) {
                 bullet.bulletUpdate(bullet);
+            }
+        }, this);
+
+        this.ennemies.forEachAlive(function (ennemy) {
+            if (ennemy.behaviour) {
+                ennemy.behaviour(ennemy);
             }
         }, this);
 
@@ -204,14 +218,10 @@ gameState.prototype = {
                 }
             }
 
-            if (this.game.time.now > this.firingTimer) {
-                this.enemyFires();
-            }
-
             //  Run collision
-            this.game.physics.arcade.overlap(this.bullets, this.aliens, this.collisionHandler, null, this);
+            this.game.physics.arcade.overlap(this.bullets, this.ennemies, this.collisionHandler, null, this);
             this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.hitPlayer, null, this);
-            this.game.physics.arcade.overlap(this.player, this.aliens, this.hitPlayer, null, this);
+            this.game.physics.arcade.overlap(this.player, this.ennemies, this.hitPlayer, null, this);
         }
     },
 
@@ -229,7 +239,7 @@ gameState.prototype = {
         explosion.reset(alien.body.x, alien.body.y);
         explosion.play('kaboom', 30, false, true);
 
-        if (this.aliens.countLiving() == 0) {
+        if (this.ennemies.countLiving() == 0) {
             this.score += 1000;
             this.scoreText.text = this.scoreString + this.score;
 
@@ -261,33 +271,6 @@ gameState.prototype = {
         }
 
         player.deathCooldown = this.game.time.now + 1000;
-    },
-
-
-    enemyFires: function () {
-
-        //  Grab the first bullet we can from the pool
-        this.enemyBullet = this.enemyBullets.getFirstExists(false);
-
-        this.livingEnemies.length = 0;
-
-        this.aliens.forEachAlive(function (alien) {
-
-            // put every living enemy in an array
-            this.livingEnemies.push(alien);
-        }, this);
-
-        if (this.enemyBullet && this.livingEnemies.length > 0) {
-            let random = this.game.rnd.integerInRange(0, this.livingEnemies.length - 1);
-
-            // randomly select one of them
-            let shooter = this.livingEnemies[random];
-            // And fire the bullet from this enemy
-            this.enemyBullet.reset(shooter.body.x, shooter.body.y);
-
-            this.game.physics.arcade.moveToObject(this.enemyBullet, this.player, 120);
-            this.firingTimer = this.game.time.now + 2000;
-        }
     },
 
     fireBullet: function (update, angle) {
