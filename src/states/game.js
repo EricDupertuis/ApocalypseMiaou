@@ -26,7 +26,7 @@ gameState.prototype = {
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 32, 32);
         this.game.load.image('lion', 'assets/characters/lion_1.png');
         this.game.load.spritesheet('kaboom', 'assets/example/explode.png', 128, 128);
-        this.game.load.image('background', 'assets/background.jpg');
+        this.game.load.image('background', 'assets/prod/background.jpg');
     },
 
     create: function () {
