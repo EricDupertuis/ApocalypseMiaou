@@ -8,7 +8,8 @@ mkdir -p $RAW $PROD
 convert $RAW/characters/lion.png -resize 694x200 -gravity West -background none -extent 695x200  $PROD/characters/lion.png
 
 convert $RAW/characters/lion.png -resize 694x200 -gravity West -background none -extent 695x200  $PROD/characters/lion.png
-convert $RAW/characters/tiger.png -resize 139x100 -gravity West -background none -extent 695x100  $PROD/characters/tiger.png
+
+convert $RAW/characters/tiger.png -resize 694x200 -gravity West -background none -extent 695x200  $PROD/characters/tiger.png
 
 convert $PROD/characters/lion.png $PROD/characters/tiger.png -append $PROD/characters/combined.png
 

@@ -25,7 +25,7 @@ gameState.prototype = {
 
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
-        this.game.load.spritesheet('characters', 'assets/prod/characters/combined.png', 139, 100, 11);
+        this.game.load.spritesheet('characters', 'assets/prod/characters/combined.png', 139, 100, 20);
 
         for (let i=1;i<=5; i++) {
             this.game.load.image('background' + i, 'assets/prod/background' + i + '.png');
@@ -116,8 +116,6 @@ gameState.prototype = {
         this.game.physics.enable(player, Phaser.Physics.ARCADE);
 
         let updateAnimation = (sprite, animation) => {
-            console.log(sprite.alternateCharacter);
-            console.log(sprite.alternateCharacter);
             if (sprite.alternateCharacter == false) {
                 let animation_name = animation.name.replace("alternate_", "");
 
@@ -151,7 +149,7 @@ gameState.prototype = {
         player.animations.add('halt', [0], 16, true).onLoop.add(updateAnimation);
         player.animations.add('accelerate', [0, 1, 2, 3, 4], 16, false).onComplete.add(updateAnimation);
         player.animations.add('break', [4, 3, 2, 1, 0], 16, false).onComplete.add(updateAnimation);
-        player.animations.add('alternate_fly', [10], 16, true).onLoop.add(updateAnimation);;
+        player.animations.add('alternate_fly', [10, 11, 12, 13, 14, 13, 12, 11], 16, true).onLoop.add(updateAnimation);;
 
         /* Now do the same for the alternate skin. */
         player.animations.play('alternate_fly');
