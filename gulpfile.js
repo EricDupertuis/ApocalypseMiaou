@@ -1,4 +1,4 @@
-var gulp = require('gulp')
+let gulp = require('gulp')
     , gutil = require('gulp-util')
     , del = require('del')
     , rename = require('gulp-rename')
@@ -10,10 +10,9 @@ var gulp = require('gulp')
     , babelify = require('babelify')
     , browserify = require('browserify')
     , watchify = require('watchify')
-    , gulpif = require('gulp-if')
     , paths;
 
-var watching = true;
+let watching = true;
 
 paths = {
     js:     ['src/*.js', 'src/**/*.js'],
@@ -40,17 +39,9 @@ gulp.task('build', null, function () {
     return bundlee();
 });
 
-gulp.task('connect', function () {
-    connect.server({
-        root: ['./'],
-        port: 9000,
-        livereload: true
-    });
-});
-
 gulp.task('watch', function () {
     watching = true;
     return gulp.watch(['./index.html', paths.js], ['build']);
 });
 
-gulp.task('default', ['connect', 'watch', 'build']);
+gulp.task('default', ['watch', 'build']);
