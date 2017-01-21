@@ -75,12 +75,7 @@ function bundle(file) {
             .pipe(sourcemaps.write('./'))
             .pipe(gulp.dest(dest.js)),
         time = new Date().getTime() - start;
-
-    setTimeout(function () {
-        browserSync.reload();
-    }, 1500);
-
-    util.log("[browserify] srebundle took ", util.colors.cyan(`${time} ms`), util.colors.grey(`(${file})`));
+    util.log("[browserify] rebundle took ", util.colors.cyan(`${time} ms`), util.colors.grey(`(${file})`));
 
     return _;
 }
@@ -101,33 +96,5 @@ gulp.task("dev", ["js:dev"]);
 gulp.task("prod", ["js:prod"]);
 
 gulp.task("default", ["watch", "dev"], function () {
-    // Serve files from the root of this project
-    browserSync.init({
-        server: {
-            baseDir: "./"
-        }
-    });
-});
 
-
-// create a task that ensures the `js` task is complete before
-// reloading browsers
-gulp.task('DoNotUse', ['build'], function (done) {
-    browserSync.reload();
-    done();
-});
-
-// use default task to launch Browsersync and watch JS files
-gulp.task('Old', ['build'], function () {
-
-    // Serve files from the root of this project
-    browserSync.init({
-        server: {
-            baseDir: "./"
-        }
-    });
-
-    // add browserSync.reload to the tasks array to make
-    // all browsers reload after tasks are complete.
-    gulp.watch("src/**/*.js", ['js-watch']);
 });
