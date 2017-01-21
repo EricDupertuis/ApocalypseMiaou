@@ -21,11 +21,13 @@ gameState.prototype = {
 
     preload: function () {
         this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 53, 32);
-        this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
+        this.game.load.spritesheet('missile', 'assets/prod/effects/missile.png', 108, 36);
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 32, 32);
+        this.game.load.spritesheet('kaboom', 'assets/prod/effects/explosion.png', 512, 512, 8);
+
+        this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
         this.game.load.image('lion', 'assets/prod/characters/lion.png');
-        this.game.load.spritesheet('kaboom', 'assets/prod/effects/explosion.png', 512, 512, 8);
         this.game.load.image('background', 'assets/prod/background.jpg');
     },
 
@@ -258,7 +260,7 @@ gameState.prototype = {
 
             if (this.mainGunButton.isDown) {
                 if (this.game.time.now > this.mainGunButton.cooldown) {
-                    this.fireBullet(null);
+                    this.fireBullet(null, 0, 'missile');
                     this.mainGunButton.cooldown = this.game.time.now + 200;
                 }
             }
@@ -269,7 +271,7 @@ gameState.prototype = {
                         let angle = 2 * 1 * Math.PI * (this.game.time.now - b.fireTime) / 1000;
                         let vel = 500 * Math.sin(angle);
                         b.body.velocity.y = vel;
-                    });
+                    }, 0, 'fireball');
                     this.waveGunButton.cooldown = this.game.time.now + 200;
                 }
             }
@@ -278,16 +280,16 @@ gameState.prototype = {
                 if (this.game.time.now > this.shockWaveButton.cooldown) {
                     this.fireBullet((b) => {
                         b.scale.setTo(1, 1 + 10 * (this.game.time.now - b.fireTime) / 1000);
-                    });
+                    }, 0, 'fireball');
                     this.shockWaveButton.cooldown = this.game.time.now + 200;
                 }
             }
 
             if (this.threeShotButton.isDown) {
                 if (this.game.time.now > this.threeShotButton.cooldown) {
-                    this.fireBullet(null, 45);
-                    this.fireBullet(null, 0);
-                    this.fireBullet(null, -45);
+                    this.fireBullet(null, 45, 'fireball');
+                    this.fireBullet(null, 0, 'fireball');
+                    this.fireBullet(null, -45, 'fireball');
                     this.threeShotButton.cooldown = this.game.time.now + 200;
                 }
             }
@@ -347,7 +349,7 @@ gameState.prototype = {
         player.deathCooldown = this.game.time.now + 1000;
     },
 
-    fireBullet: function (update, angle) {
+    fireBullet: function (update, angle, animation) {
         if (!angle) {
             angle = 0;
         }
@@ -361,7 +363,7 @@ gameState.prototype = {
             this.bullet.scale.setTo(1, 1);
             //  And fire it
             this.bullet.reset(this.player.x, this.player.y + 8);
-            this.bullet.animations.play('fireball', 10, true, false);
+            this.bullet.animations.play(animation, 10, true, false);
             this.bullet.body.velocity.x = Math.cos(angle) * 400;
             this.bullet.body.velocity.y = Math.sin(angle) * 400;
             this.bulletTime = this.game.time.now + 100;
