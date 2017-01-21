@@ -20,7 +20,7 @@ gameState.prototype = {
     },
 
     preload: function () {
-        this.game.load.image('bullet', 'assets/example/bullet.png');
+        this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 159, 32);
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 32, 32);
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
@@ -41,7 +41,7 @@ gameState.prototype = {
         this.bullets = this.game.add.group();
         this.bullets.enableBody = true;
         this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-        this.bullets.createMultiple(30, 'bullet');
+        this.bullets.createMultiple(30, 'fireball');
         this.bullets.setAll('anchor.x', 0.5);
         this.bullets.setAll('anchor.y', 1);
         this.bullets.setAll('outOfBoundsKill', true);
@@ -357,9 +357,11 @@ gameState.prototype = {
         this.bullet = this.bullets.getFirstExists(false);
 
         if (this.bullet) {
+            this.bullet.animations.add('fireball');
             this.bullet.scale.setTo(1, 1);
             //  And fire it
             this.bullet.reset(this.player.x, this.player.y + 8);
+            this.bullet.animations.play('fireball', 10, true, false);
             this.bullet.body.velocity.x = Math.cos(angle) * 400;
             this.bullet.body.velocity.y = Math.sin(angle) * 400;
             this.bulletTime = this.game.time.now + 100;
