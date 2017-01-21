@@ -19,6 +19,7 @@ gameState.prototype = {
 
     preload: function () {
         this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 53, 32);
+        this.game.load.spritesheet('ice', 'assets/prod/effects/ice.png', 45, 45);
         this.game.load.spritesheet('missile', 'assets/prod/effects/missile.png', 84, 36);
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 64, 64);
         this.game.load.spritesheet('kaboom', 'assets/prod/effects/explosion.png', 512, 512, 8);
@@ -369,7 +370,7 @@ gameState.prototype = {
                         let angle = 2 * 1 * Math.PI * (this.game.time.now - b.fireTime) / 1000;
                         let vel = 500 * Math.sin(angle);
                         b.body.velocity.y = vel;
-                    }, 0, 'fireball');
+                    }, 0, 'ice');
                     this.waveGunButton.cooldown = this.game.time.now + 200;
                 }
             }
