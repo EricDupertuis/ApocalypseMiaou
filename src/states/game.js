@@ -27,7 +27,7 @@ gameState.prototype = {
 
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
-        this.game.load.image('lion', 'assets/prod/characters/lion.png');
+        this.game.load.spritesheet('lion', 'assets/prod/characters/lion.png', 139, 100, 5);
 
         for (let i=1;i<=5; i++) {
             this.game.load.image('background' + i, 'assets/prod/background' + i + '.png');
@@ -70,7 +70,7 @@ gameState.prototype = {
         this.ennemies.enableBody = true;
         this.ennemies.physicsBodyType = Phaser.Physics.ARCADE;
 
-        this.createLevel();
+        //this.createLevel();
 
         //  The score
         this.scoreString = 'Score : ';
@@ -110,7 +110,40 @@ gameState.prototype = {
 
     createPlayer: function () {
         let player = this.game.add.sprite(400, 500, 'lion');
+        player.moving = false;
         this.game.physics.enable(player, Phaser.Physics.ARCADE);
+
+        let updateAnimation = (sprite, animation) => {
+            if (animation.name == 'halt') {
+                if (sprite.moving) {
+                    sprite.animations.play('accelerate');
+                }
+            } else if (animation.name == 'accelerate') {
+                if (sprite.moving) {
+                    sprite.animations.play('fly');
+                } else {
+                    sprite.animations.play('break');
+                }
+            } else if (animation.name == 'fly') {
+                if (!sprite.moving) {
+                    sprite.animations.play('break');
+                }
+            } else if (animation.name == 'break') {
+               if (sprite.moving) {
+                    sprite.animations.play('accelerate');
+                } else {
+                    sprite.animations.play('halt');
+                }
+            }
+        };
+
+        player.animations.add('fly', [3, 4], 16, true).onLoop.add(updateAnimation);
+        player.animations.add('halt', [0], 16, true).onLoop.add(updateAnimation);
+        player.animations.add('accelerate', [0, 1, 2, 3, 4], 16, false).onComplete.add(updateAnimation);
+        player.animations.add('break', [4, 3, 2, 1, 0], 16, false).onComplete.add(updateAnimation);;
+
+        player.animations.play('fly');
+
         player.physicsBodyType = Phaser.Physics.ARCADE;
         player.enableBody = true;
         player.anchor.setTo(0.5, 0.5);
@@ -258,12 +291,14 @@ gameState.prototype = {
         if (this.player.alive) {
             //  Reset the player, then check for movement keys
             this.player.body.velocity.setTo(0, 0);
+            this.player.moving = false;
 
             let max_speed = 500;
 
             if (this.cursors.left.isDown) {
                 this.player.body.velocity.x = -max_speed;
             } else if (this.cursors.right.isDown) {
+                this.player.moving = true;
                 this.player.body.velocity.x = max_speed;
             }
 
