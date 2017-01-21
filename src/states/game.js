@@ -18,11 +18,13 @@ gameState.prototype = {
     },
 
     preload: function () {
-        this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 55, 32);
+        this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 53, 32);
+        this.game.load.spritesheet('ice', 'assets/prod/effects/ice.png', 45, 45);
         this.game.load.spritesheet('missile', 'assets/prod/effects/missile.png', 84, 36);
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 64, 64);
         this.game.load.spritesheet('kaboom', 'assets/prod/effects/explosion.png', 512, 512, 8);
         this.game.load.spritesheet('lumberjack', 'assets/prod/enemies/bucheron.png', 100, 100, 12);
+        this.game.load.spritesheet('meteor', 'assets/prod/enemies/meteor.png', 72, 150, 4);
 
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
@@ -208,7 +210,20 @@ gameState.prototype = {
     createLumberjack: function (x, y) {
         let lumberjack = this.ennemies.create(x, y, 'lumberjack');
         lumberjack.animations.add('lumberjack');
-        lumberjack.animations.play('lumberjack', 10, true, false);
+        lumberjack.animations.play('lumberjack', 10, true);
+    },
+
+    createMeteor: function (x, y) {
+        let meteor = this.ennemies.create(x, 0, 'meteor');
+        meteor.anchor.setTo(0.5, 1.);
+        meteor.animations.add('meteor');
+        meteor.animations.play('meteor', 10, true);
+
+        meteor.behaviour = (m) => {
+            if (this.player.x >= m.body.x) {
+                meteor.body.velocity.y = 1000;
+            }
+        };
     },
 
     createChopper: function (x, y) {
@@ -281,6 +296,8 @@ gameState.prototype = {
         this.createHunter(4 * x, 11 * y);
 */
         /* TODO: camion */
+
+        this.createMeteor(1.5 * x, -2.5 * y);
 
         this.createChopper(3 * x, 8 * y);
         this.createChopper(4 * x, 9 * y);
@@ -362,7 +379,7 @@ gameState.prototype = {
                         let angle = 2 * 1 * Math.PI * (this.game.time.now - b.fireTime) / 1000;
                         let vel = 500 * Math.sin(angle);
                         b.body.velocity.y = vel;
-                    }, 0, 'fireball');
+                    }, 0, 'ice');
                     this.waveGunButton.cooldown = this.game.time.now + 200;
                 }
             }
