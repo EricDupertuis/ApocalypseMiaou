@@ -7,6 +7,12 @@ mkdir -p $RAW $PROD
 
 convert $RAW/characters/lion.png -resize 694x200 -gravity West -background none -extent 695x200  $PROD/characters/lion.png
 
+convert $RAW/characters/lion.png -resize 694x200 -gravity West -background none -extent 695x200  $PROD/characters/lion.png
+
+convert $RAW/characters/tiger.png -resize 694x200 -gravity West -background none -extent 695x200  $PROD/characters/tiger.png
+
+convert $PROD/characters/lion.png $PROD/characters/tiger.png -append $PROD/characters/combined.png
+
 convert $RAW/enemies/helicopter.png -resize 200x150 $PROD/enemies/helicopter.png
 
 convert $RAW/effects/explosion.png -resize 2048x1024 $PROD/effects/explosion.png
