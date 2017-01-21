@@ -205,8 +205,11 @@ gameState.prototype = {
 
     createLumberjack: function (x, y) {
         let lumberjack = this.ennemies.create(x, y, 'lumberjack');
-        lumberjack.animations.add('lumberjack');
-        lumberjack.animations.play('lumberjack', 10, true);
+        lumberjack.animations.add('chop', [0, 1, 2, 3, 4, 5, 4, 3, 2, 1], 10, true);
+        lumberjack.animations.play('chop');
+
+        // Avoid having  all lumberjacks stay in sync
+        lumberjack.animations.currentAnim.setFrame(Math.floor(Math.random()*5), true);
     },
 
     createMeteor: function (x, y) {
