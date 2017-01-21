@@ -15,12 +15,10 @@ gameState.prototype = {
         this.scoreText = null;
         this.lives = null;
         this.enemyBullet = null;
-        this.firingTimer = 0;
-        this.livingEnemies = [];
     },
 
     preload: function () {
-        this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 53, 32);
+        this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 55, 32);
         this.game.load.spritesheet('missile', 'assets/prod/effects/missile.png', 84, 36);
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 64, 64);
         this.game.load.spritesheet('kaboom', 'assets/prod/effects/explosion.png', 512, 512, 8);
@@ -262,7 +260,9 @@ gameState.prototype = {
         /* TODO: camion */
         this.createHunter(5 * x, 11 * y);
 
-        this.createChopper(1 * x, 5 * y);
+        this.createChopper(3 * x, 8 * y);
+        this.createChopper(4 * x, 9 * y);
+        this.createChopper(5 * x, 10 * y);
     },
 
     setupInvader: function (invader) {
@@ -353,10 +353,9 @@ gameState.prototype = {
         }
     },
 
-    collisionHandler: function (bullet, alien) {
-        //  When a bullet hits an alien we kill them both
+    collisionHandler: function (bullet, enemy) {
         bullet.kill();
-        alien.kill();
+        enemy.kill();
 
         //  Increase the score
         this.score += 20;
