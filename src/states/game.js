@@ -94,6 +94,12 @@ gameState.prototype = {
         this.mainGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.shockWaveButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
         this.waveGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+        this.threeShotButton = this.game.input.keyboard.addKey(Phaser.Keyboard.E);
+
+        this.mainGunButton.cooldown = 0;
+        this.shockWaveButton.cooldown = 0;
+        this.waveGunButton.cooldown = 0;
+        this.threeShotButton.cooldown = 0;
 
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.game.input.onDown.add(this.goFullScreen, this);
@@ -169,17 +175,34 @@ gameState.prototype = {
             }
 
             if (this.mainGunButton.isDown) {
-                this.fireBullet(null);
+                if (this.game.time.now > this.mainGunButton.cooldown) {
+                    this.fireBullet(null);
+                    this.mainGunButton.cooldown = this.game.time.now + 200;
+                }
             }
 
             if (this.waveGunButton.isDown) {
-                this.fireBullet(this.updateWaveBullet);
+                if (this.game.time.now > this.waveGunButton.cooldown) {
+                    this.fireBullet(this.updateWaveBullet);
+                    this.waveGunButton.cooldown = this.game.time.now + 200;
+                }
             }
 
             if (this.shockWaveButton.isDown) {
-                this.fireBullet(this.updateShockwaveBullet);
+                if (this.game.time.now > this.shockWaveButton.cooldown) {
+                    this.fireBullet(this.updateShockwaveBullet);
+                    this.shockWaveButton.cooldown = this.game.time.now + 200;
+                }
             }
 
+            if (this.threeShotButton.isDown) {
+                if (this.game.time.now > this.threeShotButton.cooldown) {
+                    this.fireBullet(null, 45);
+                    this.fireBullet(null, 0);
+                    this.fireBullet(null, -45);
+                    this.threeShotButton.cooldown = this.game.time.now + 200;
+                }
+            }
 
             if (this.game.time.now > this.firingTimer) {
                 this.enemyFires();
@@ -267,22 +290,26 @@ gameState.prototype = {
         }
     },
 
-    fireBullet: function (update) {
-        //  To avoid them being allowed to fire too fast we set a time limit
-        if (this.game.time.now > this.bulletTime) {
-            //  Grab the first bullet we can from the pool
-            this.bullet = this.bullets.getFirstExists(false);
-
-            if (this.bullet) {
-                this.bullet.scale.setTo(1, 1);
-                //  And fire it
-                this.bullet.reset(this.player.x, this.player.y + 8);
-                this.bullet.body.velocity.x = 400;
-                this.bulletTime = this.game.time.now + 100;
-                this.bullet.fireTime = this.game.time.now;
-                this.bullet.bulletUpdate = update;
-            }
+    fireBullet: function (update, angle) {
+        if (!angle) {
+            angle = 0;
         }
+        angle = angle * Math.PI / 180;
+
+        //  Grab the first bullet we can from the pool
+        this.bullet = this.bullets.getFirstExists(false);
+
+        if (this.bullet) {
+            this.bullet.scale.setTo(1, 1);
+            //  And fire it
+            this.bullet.reset(this.player.x, this.player.y + 8);
+            this.bullet.body.velocity.x = Math.cos(angle) * 400;
+            this.bullet.body.velocity.y = Math.sin(angle) * 400;
+            this.bulletTime = this.game.time.now + 100;
+            this.bullet.fireTime = this.game.time.now;
+            this.bullet.bulletUpdate = update;
+        }
+
     },
 
     updateShockwaveBullet: function (bullet) {
