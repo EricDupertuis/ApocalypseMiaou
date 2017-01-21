@@ -1,4 +1,5 @@
-let gameState = (game) => {};
+let gameState = (game) => {
+};
 
 gameState.prototype = {
     init: function () {
@@ -69,15 +70,14 @@ gameState.prototype = {
 
         //  The score
         this.scoreString = 'Score : ';
-        this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { font: '34px Arial', fill: '#fff' });
+        this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, {font: '34px Arial', fill: '#fff'});
 
         //  Lives
         this.lives = this.game.add.group();
-        this.game.add.text(this.game.world.width - 100, 10, 'Lives : ', { font: '34px Arial', fill: '#fff' });
+        this.game.add.text(this.game.world.width - 100, 10, 'Lives : ', {font: '34px Arial', fill: '#fff'});
 
 
-        for (let i = 0; i < 3; i++)
-        {
+        for (let i = 0; i < 3; i++) {
             let lion = this.lives.create(this.game.world.width - 100 + (30 * i), 60, 'lion');
             lion.anchor.setTo(0.5, 0.5);
             lion.angle = 90;
@@ -96,7 +96,7 @@ gameState.prototype = {
         this.waveGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
     },
 
-    createPlayer: function() {
+    createPlayer: function () {
         let player = this.game.add.sprite(400, 500, 'lion');
         this.game.physics.enable(player, Phaser.Physics.ARCADE);
         player.physicsBodyType = Phaser.Physics.ARCADE;
@@ -109,13 +109,11 @@ gameState.prototype = {
     },
 
     createAliens: function () {
-        for (let y = 0; y < 10; y++)
-        {
-            for (let x = 0; x < 4; x++)
-            {
+        for (let y = 0; y < 10; y++) {
+            for (let x = 0; x < 4; x++) {
                 let alien = this.aliens.create(x * 48, y * 50, 'invader');
                 alien.anchor.setTo(0.5, 0.5);
-                alien.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
+                alien.animations.add('fly', [0, 1, 2, 3], 20, true);
                 alien.play('fly');
                 alien.body.moves = false;
             }
@@ -125,7 +123,7 @@ gameState.prototype = {
         this.aliens.y = 50;
 
         //  All this does is basically start the invaders moving. Notice we're moving the Group they belong to, rather than the invaders directly.
-        let tween = this.game.add.tween(this.aliens).to( { y: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+        let tween = this.game.add.tween(this.aliens).to({y: 200}, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
 
         //  When the tween loops it calls descend
         tween.onLoop.add(this.moveLeft, this);
@@ -144,7 +142,7 @@ gameState.prototype = {
     update: function () {
         this.backgroundGroup.x -= 2;
 
-        this.bullets.forEachAlive(function(bullet) {
+        this.bullets.forEachAlive(function (bullet) {
             if (bullet.bulletUpdate) {
                 bullet.bulletUpdate(bullet);
             }
@@ -204,12 +202,11 @@ gameState.prototype = {
         explosion.reset(alien.body.x, alien.body.y);
         explosion.play('kaboom', 30, false, true);
 
-        if (this.aliens.countLiving() == 0)
-        {
+        if (this.aliens.countLiving() == 0) {
             this.score += 1000;
             this.scoreText.text = this.scoreString + this.score;
 
-            this.enemyBullets.callAll('kill',this);
+            this.enemyBullets.callAll('kill', this);
         }
     },
 
@@ -245,37 +242,34 @@ gameState.prototype = {
         //  Grab the first bullet we can from the pool
         this.enemyBullet = this.enemyBullets.getFirstExists(false);
 
-        this.livingEnemies.length=0;
+        this.livingEnemies.length = 0;
 
-        this.aliens.forEachAlive(function(alien){
+        this.aliens.forEachAlive(function (alien) {
 
             // put every living enemy in an array
             this.livingEnemies.push(alien);
         }, this);
 
-        if (this.enemyBullet && this.livingEnemies.length > 0)
-        {
-            let random = this.game.rnd.integerInRange(0, this.livingEnemies.length-1);
+        if (this.enemyBullet && this.livingEnemies.length > 0) {
+            let random = this.game.rnd.integerInRange(0, this.livingEnemies.length - 1);
 
             // randomly select one of them
             let shooter = this.livingEnemies[random];
             // And fire the bullet from this enemy
             this.enemyBullet.reset(shooter.body.x, shooter.body.y);
 
-            this.game.physics.arcade.moveToObject(this.enemyBullet, this.player,120);
+            this.game.physics.arcade.moveToObject(this.enemyBullet, this.player, 120);
             this.firingTimer = this.game.time.now + 2000;
         }
     },
 
     fireBullet: function (update) {
-         //  To avoid them being allowed to fire too fast we set a time limit
-        if (this.game.time.now > this.bulletTime)
-        {
+        //  To avoid them being allowed to fire too fast we set a time limit
+        if (this.game.time.now > this.bulletTime) {
             //  Grab the first bullet we can from the pool
             this.bullet = this.bullets.getFirstExists(false);
 
-            if (this.bullet)
-            {
+            if (this.bullet) {
                 this.bullet.scale.setTo(1, 1);
                 //  And fire it
                 this.bullet.reset(this.player.x, this.player.y + 8);
@@ -293,7 +287,7 @@ gameState.prototype = {
 
     updateWaveBullet: function (bullet) {
         let angle = 2 * 1 * Math.PI * (this.game.time.now - bullet.fireTime) / 1000;
-        let vel =  500 * Math.sin(angle);
+        let vel = 500 * Math.sin(angle);
         bullet.body.velocity.y = vel;
     },
 
