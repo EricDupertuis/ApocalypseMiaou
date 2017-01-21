@@ -197,14 +197,20 @@ gameState.prototype = {
 
             if (this.waveGunButton.isDown) {
                 if (this.game.time.now > this.waveGunButton.cooldown) {
-                    this.fireBullet(this.updateWaveBullet);
+                    this.fireBullet((b) => {
+                        let angle = 2 * 1 * Math.PI * (this.game.time.now - b.fireTime) / 1000;
+                        let vel = 500 * Math.sin(angle);
+                        b.body.velocity.y = vel;
+                    });
                     this.waveGunButton.cooldown = this.game.time.now + 200;
                 }
             }
 
             if (this.shockWaveButton.isDown) {
                 if (this.game.time.now > this.shockWaveButton.cooldown) {
-                    this.fireBullet(this.updateShockwaveBullet);
+                    this.fireBullet((b) => {
+                        b.scale.setTo(1, 1 + 10 * (this.game.time.now - b.fireTime) / 1000);
+                    });
                     this.shockWaveButton.cooldown = this.game.time.now + 200;
                 }
             }
@@ -295,15 +301,6 @@ gameState.prototype = {
 
     },
 
-    updateShockwaveBullet: function (bullet) {
-        bullet.scale.setTo(1, 1 + 10 * (this.game.time.now - bullet.fireTime) / 1000);
-    },
-
-    updateWaveBullet: function (bullet) {
-        let angle = 2 * 1 * Math.PI * (this.game.time.now - bullet.fireTime) / 1000;
-        let vel = 500 * Math.sin(angle);
-        bullet.body.velocity.y = vel;
-    },
 
     resetBullet: function (bullet) {
         //  Called if the bullet goes out of the screen
