@@ -20,7 +20,7 @@ gameState.prototype = {
     },
 
     preload: function () {
-        this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 53, 32);
+        this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 53, 32, 2);
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 32, 32);
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
