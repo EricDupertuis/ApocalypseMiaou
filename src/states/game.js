@@ -116,6 +116,9 @@ gameState.prototype = {
         let player = this.game.add.sprite(400, 500, 'characters');
         player.moving = false;
         player.alternateCharacter = false;
+        player.shieldEnabled = false;
+        player.shieldEnergyMax = 100;
+        player.shieldEnergy = player.shieldEnergyMax;
         this.game.physics.enable(player, Phaser.Physics.ARCADE);
 
         let updateAnimation = (sprite, animation) => {
@@ -347,13 +350,9 @@ gameState.prototype = {
             //  Reset the player, then check for movement keys
             this.player.body.velocity.setTo(0, 0);
             this.player.moving = false;
+            // Will be re-enabled in control handler if necessary
+            this.player.shieldEnabled = false;
 
-            /* Apply tint if we recently got hit. */
-            if (this.game.time.now < this.player.deathCooldown) {
-                this.player.tint = 0xff00000;
-            } else {
-                this.player.tint = 0xffffff;
-            }
 
             let max_speed = 500;
 
@@ -390,7 +389,6 @@ gameState.prototype = {
                 }
             }
 
-
             if (this.player.alternateCharacter == false) {
                 if (this.mainGunButton.isDown) {
                     if (this.game.time.now > this.missileCooldown) {
@@ -416,10 +414,25 @@ gameState.prototype = {
                         this.waveCooldown = this.game.time.now + 200;
                     }
                 } else if (this.secondGunButton.isDown) {
-                    // TODO: Shield
+                    if (this.player.shieldEnergy >= 0) {
+                        this.player.shieldEnabled = true;
+                        this.player.shieldEnergy--;
+                    }
+                } else if (this.secondGunButton.isUp) {
+                    if (this.player.shieldEnergy < this.player.shieldEnergyMax) {
+                        this.player.shieldEnergy++;
+                    }
                 }
             }
 
+            /* Apply tint if we recently got hit. */
+            if (this.game.time.now < this.player.deathCooldown) {
+                this.player.tint = 0xff0000;
+            } else if (this.player.shieldEnabled) {
+                this.player.tint = 0x0000ff;
+            } else {
+                this.player.tint = 0xffffff;
+            }
 
             //  Run collision
             this.game.physics.arcade.overlap(this.bullets, this.ennemies, this.collisionHandler, null, this);
@@ -463,23 +476,25 @@ gameState.prototype = {
 
         enemy.kill();
 
-        this.live = this.lives.getFirstAlive();
-
-        if (this.live) {
-            this.live.kill();
-        }
-
         //  And create an explosion :)
         let explosion = this.explosions.getFirstExists(false);
         explosion.reset(player.body.x, player.body.y);
-        explosion.play('kaboom', 30, false, true);
+        explosion.play('kaboom', 16, false, true);
 
-        // When the player dies
-        if (this.lives.countLiving() < 1) {
-            this.game.state.start("Menu");
+        if (this.player.shieldEnabled == false) {
+            this.live = this.lives.getFirstAlive();
+
+            if (this.live) {
+                this.live.kill();
+            }
+
+            // When the player dies
+            if (this.lives.countLiving() < 1) {
+                this.game.state.start("Menu");
+            }
+
+            player.deathCooldown = this.game.time.now + 1000;
         }
-
-        player.deathCooldown = this.game.time.now + 1000;
     },
 
     fireBullet: function (update, angle, animation) {
