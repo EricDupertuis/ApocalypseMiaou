@@ -94,6 +94,10 @@ gameState.prototype = {
         this.mainGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         this.shockWaveButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
         this.waveGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
+
+        this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.game.input.onDown.add(this.goFullScreen, this);
+
     },
 
     createPlayer: function () {
@@ -294,6 +298,14 @@ gameState.prototype = {
     resetBullet: function (bullet) {
         //  Called if the bullet goes out of the screen
         bullet.kill();
+    },
+
+    goFullScreen: function () {
+        if (this.game.scale.isFullScreen) {
+            this.game.scale.stopFullScreen();
+        } else {
+            this.game.scale.startFullScreen(false);
+        }
     }
 }
 
