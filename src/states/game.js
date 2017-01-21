@@ -21,7 +21,7 @@ gameState.prototype = {
 
     preload: function () {
         this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 53, 32);
-        this.game.load.spritesheet('missile', 'assets/prod/effects/missile.png', 165, 36);
+        this.game.load.spritesheet('missile', 'assets/prod/effects/missile.png', 84, 36);
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 64, 64);
         this.game.load.spritesheet('kaboom', 'assets/prod/effects/explosion.png', 512, 512, 8);
 
