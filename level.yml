@@ -1,0 +1,16 @@
+base_folder: assets/raw/level_tiles
+tiles:
+  - fg: arbre_1_hiver.png
+    bg: ciel_2.png
+  - fg: arbre_2_hiver.png
+    bg: ciel_2.png
+  - fg: arbre_3_hiver.png
+    bg: ciel_2.png
+  - fg: arbre_vert_1.png
+    bg: ciel_2.png
+  - fg: arbre_vert_2.png
+    bg: ciel_2.png
+  - fg: arbre_vert_3.png
+    bg: ciel_2.png
+  - fg: arbre_vert_3.png
+    bg: ciel_2.png
