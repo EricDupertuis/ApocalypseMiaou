@@ -1,4 +1,6 @@
 base_folder: assets/raw/level_tiles
+output: assets/prod/background.png
+height: 720 # pixels
 tiles:
   - fg: arbre_1_hiver.png
     bg: ciel_2.png

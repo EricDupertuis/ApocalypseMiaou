@@ -12,7 +12,7 @@ from PIL import Image
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("level", help="Level description in yaml.", type=argparse.FileType())
-    parser.add_argument("output", help="Output image")
+    parser.add_argument("--output", "-o", help="Output image, overides the one in level.")
 
     return parser.parse_args()
 
@@ -45,7 +45,14 @@ def main():
       output.paste(fg, (x_offset, 0), mask=fg)
       x_offset += bg.size[0]
 
-    output.save(args.output)
+    new_height = level['height']
+    new_width = int(output.size[0] / output.size[1] * new_height)
+    output = output.resize((new_width, new_height))
+
+    if args.output:
+        output.save(args.output)
+    else:
+        output.save(level['output'])
 
 if __name__ == '__main__':
     main()
