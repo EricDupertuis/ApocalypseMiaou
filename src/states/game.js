@@ -370,7 +370,7 @@ gameState.prototype = {
 
         //  And create an explosion :)
         let explosion = this.explosions.getFirstExists(false);
-        explosion.reset(alien.body.x, alien.body.y);
+        explosion.reset(enemy.body.x, enemy.body.y);
         explosion.play('kaboom', 10, false, true);
 
         if (this.ennemies.countLiving() == 0) {
