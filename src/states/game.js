@@ -214,6 +214,8 @@ gameState.prototype = {
     createChopper: function (x, y) {
         let chopper = this.ennemies.create(x, y, 'chopper');
         chopper.checkWorldBounds = true;
+        chopper.armor = 3;
+        chopper.armorTouchCooldown = 0;
 
         chopper.events.onEnterBounds.add((c) => {
             console.log("CHOPPER: entered bounds");
@@ -264,20 +266,21 @@ gameState.prototype = {
     createLevel: function () {
         let y = 60;
         let x = 666;
-        /* TODO: bucheron */
+
         this.createLumberjack(1 * x, 5 * y);
-        this.createLumberjack(1 * x, 8 * y);
+        this.createLumberjack(1.2 * x, 5 * y);
+        this.createLumberjack(4 * x, 6 * y);
+        this.createLumberjack(3 * x, 7 * y);
+/*
+        this.createHunter(2 * x, 2 * y);
+        this.createHunter(2 * x, 10 * y);
 
-//        this.createHunter(2 * x, 2 * y);
-  //      this.createHunter(2 * x, 10 * y);
+        this.createHunter(3 * x, 11 * y);
 
-    //    this.createHunter(3 * x, 11 * y);
-
-    //    this.createHunter(4 * x, 6 * y);
-    //    this.createHunter(4 * x, 11 * y);
-
+        this.createHunter(4 * x, 6 * y);
+        this.createHunter(4 * x, 11 * y);
+*/
         /* TODO: camion */
-    //    this.createHunter(5 * x, 11 * y);
 
         this.createChopper(3 * x, 8 * y);
         this.createChopper(4 * x, 9 * y);
@@ -307,9 +310,15 @@ gameState.prototype = {
             }
         }, this);
 
-        this.ennemies.forEachAlive(function (ennemy) {
-            if (ennemy.behaviour) {
-                ennemy.behaviour(ennemy);
+        this.ennemies.forEachAlive(function (enemy) {
+            if (enemy.behaviour) {
+                enemy.behaviour(enemy);
+            }
+
+            if (enemy.armorTouchCooldown && this.game.time.now < enemy.armorTouchCooldown) {
+                enemy.tint = 0xff00000;
+            } else {
+                enemy.tint = 0xffffff;
             }
         }, this);
 
@@ -384,6 +393,13 @@ gameState.prototype = {
     },
 
     collisionHandler: function (bullet, enemy) {
+        if (enemy.armor && enemy.armor > 0) {
+            enemy.armor--;
+            enemy.armorTouchCooldown = this.game.time.now + 200;
+            bullet.kill();
+            return;
+        }
+
         bullet.kill();
         enemy.kill();
 
