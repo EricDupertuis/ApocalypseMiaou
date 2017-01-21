@@ -1,5 +1,4 @@
-let gameState = (game) => {
-};
+let gameState = (game) => {};
 
 gameState.prototype = {
     init: function () {
@@ -67,7 +66,7 @@ gameState.prototype = {
         this.ennemies.enableBody = true;
         this.ennemies.physicsBodyType = Phaser.Physics.ARCADE;
 
-        this.createennemies();
+        this.createEnnemies();
 
         //  The score
         this.scoreString = 'Score : ';
@@ -76,7 +75,6 @@ gameState.prototype = {
         //  Lives
         this.lives = this.game.add.group();
         this.game.add.text(this.game.world.width - 100, 10, 'Lives : ', {font: '34px Arial', fill: '#fff'});
-
 
         for (let i = 0; i < 3; i++) {
             let lion = this.lives.create(this.game.world.width - 100 + (30 * i), 60, 'lion');
@@ -104,7 +102,6 @@ gameState.prototype = {
 
         this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.game.input.onDown.add(this.goFullScreen, this);
-
     },
 
     createPlayer: function () {
@@ -149,7 +146,7 @@ gameState.prototype = {
         };
     },
 
-    createennemies: function () {
+    createEnnemies: function () {
         this.createHunter(1000, 700);
     },
 
