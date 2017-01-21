@@ -228,6 +228,8 @@ gameState.prototype = {
 
         /* TODO: camion */
         this.createHunter(5 * x, 11 * y);
+
+        this.createChopper(1 * x, 5 * y);
     },
 
     setupInvader: function (invader) {
