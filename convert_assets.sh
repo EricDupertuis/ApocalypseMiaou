@@ -9,7 +9,7 @@ mkdir -p $RAW $PROD
 
 cp $RAW/background.jpg $PROD/background.jpg
 
-convert $RAW/characters/lion.png -resize 75x50 $PROD/characters/lion.png
+convert $RAW/characters/lion.png -resize 150x100 $PROD/characters/lion.png
 
 convert $RAW/enemies/helicopter.png -resize 200x150 $PROD/enemies/helicopter.png
 
