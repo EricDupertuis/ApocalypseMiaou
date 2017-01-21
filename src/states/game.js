@@ -22,6 +22,7 @@ gameState.prototype = {
         this.game.load.spritesheet('missile', 'assets/prod/effects/missile.png', 84, 36);
         this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 64, 64);
         this.game.load.spritesheet('kaboom', 'assets/prod/effects/explosion.png', 512, 512, 8);
+        this.game.load.spritesheet('lumberjack', 'assets/prod/enemies/bucheron.png', 100, 100, 12);
 
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
@@ -192,6 +193,12 @@ gameState.prototype = {
         }, this);
     },
 
+    createLumberjack: function (x, y) {
+        let lumberjack = this.ennemies.create(x, y, 'lumberjack');
+        lumberjack.animations.add('lumberjack');
+        lumberjack.animations.play('lumberjack', 10, true, false);
+    },
+
     createChopper: function (x, y) {
         let chopper = this.ennemies.create(x, y, 'chopper');
         chopper.checkWorldBounds = true;
@@ -207,7 +214,7 @@ gameState.prototype = {
 
             chopper.behaviour = (c) => {
                 let freq = 0.25;
-                let amplitude = 400;
+                let amplitude = 200;
 
                 c.body.velocity.x = -100;
                 c.body.velocity.y = Math.sin((this.game.time.now / 1000) * 2 * Math.PI * freq) * amplitude;
@@ -246,19 +253,19 @@ gameState.prototype = {
         let y = 60;
         let x = 666;
         /* TODO: bucheron */
-        this.createHunter(1 * x, 5 * y);
-        this.createHunter(1 * x, 8 * y);
+        this.createLumberjack(1 * x, 5 * y);
+        this.createLumberjack(1 * x, 8 * y);
 
-        this.createHunter(2 * x, 2 * y);
-        this.createHunter(2 * x, 10 * y);
+//        this.createHunter(2 * x, 2 * y);
+  //      this.createHunter(2 * x, 10 * y);
 
-        this.createHunter(3 * x, 11 * y);
+    //    this.createHunter(3 * x, 11 * y);
 
-        this.createHunter(4 * x, 6 * y);
-        this.createHunter(4 * x, 11 * y);
+    //    this.createHunter(4 * x, 6 * y);
+    //    this.createHunter(4 * x, 11 * y);
 
         /* TODO: camion */
-        this.createHunter(5 * x, 11 * y);
+    //    this.createHunter(5 * x, 11 * y);
 
         this.createChopper(3 * x, 8 * y);
         this.createChopper(4 * x, 9 * y);

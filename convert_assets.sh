@@ -14,3 +14,5 @@ convert $RAW/effects/explosion.png -resize 2048x1024 $PROD/effects/explosion.png
 convert $RAW/effects/fireball.png -resize 163x98 $PROD/effects/fireball.png
 
 convert $RAW/effects/missile.png -resize 257x36 $PROD/effects/missile.png
+
+convert $RAW/enemies/bucheron.png -resize 600x200 $PROD/enemies/bucheron.png
