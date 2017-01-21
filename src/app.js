@@ -4,7 +4,7 @@ window.Phaser = require('phaser/build/custom/phaser-split');
 let menuState = require('./states/menu');
 let gameState = require('./states/game');
 
-const game = new Phaser.Game(800, 600, Phaser.AUTO, 'ggj17');
+const game = new Phaser.Game(1280, 720, Phaser.AUTO, 'ggj17');
 
 game.state.add("Menu", menuState);
 game.state.add("Game", gameState);
