@@ -295,6 +295,13 @@ gameState.prototype = {
             this.player.body.velocity.setTo(0, 0);
             this.player.moving = false;
 
+            /* Apply tint if we recently got hit. */
+            if (this.game.time.now < this.player.deathCooldown) {
+                this.player.tint = 0xff00000;
+            } else {
+                this.player.tint = 0xffffff;
+            }
+
             let max_speed = 500;
 
             if (this.cursors.left.isDown) {
