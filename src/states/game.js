@@ -282,24 +282,20 @@ gameState.prototype = {
         let y = 60;
         let x = 666;
 
-        this.createLumberjack(1 * x, 5 * y);
-        this.createLumberjack(1.2 * x, 5 * y);
-        this.createLumberjack(3 * x, 6 * y);
-        this.createLumberjack(3 * x, 7 * y);
-        this.createLumberjack(4 * x, 6 * y);
-        this.createLumberjack(4 * x, 7 * y);
-/*
-        this.createHunter(2 * x, 2 * y);
-        this.createHunter(2 * x, 10 * y);
+        for (let i = 1; i <= 30; i++) {
+            this.createLumberjack(i * x, 6 * y);
+            this.createLumberjack((i + 0.5) * x, 7 * y);
+        }
 
-        this.createHunter(3 * x, 11 * y);
-
-        this.createHunter(4 * x, 6 * y);
-        this.createHunter(4 * x, 11 * y);
-*/
+        for (let i = 2; i <= 30; i++) {
+            this.createHunter(2 * x, 10 * y);
+            i += 2;
+        }
         /* TODO: camion */
 
-        this.createMeteor(1.5 * x, -2.5 * y);
+        this.createMeteor(1 * x, -2.5 * y);
+        this.createMeteor(4 * x, -2.5 * y);
+        this.createMeteor(7 * x, -2.5 * y);
 
         this.createChopper(3 * x, 5 * y);
         this.createChopper(4 * x, 5 * y);
