@@ -52,7 +52,7 @@ gameState.prototype = {
         this.enemyBullets = this.backgroundGroup.add(enemyBullets);
         this.enemyBullets.enableBody = true;
         this.enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
-        this.enemyBullets.createMultiple(30, 'enemyBullet');
+        this.enemyBullets.createMultiple(300, 'enemyBullet');
         this.enemyBullets.setAll('anchor.x', 0.5);
         this.enemyBullets.setAll('anchor.y', 1);
         this.enemyBullets.setAll('outOfBoundsKill', true);
@@ -128,14 +128,20 @@ gameState.prototype = {
             }
 
             if (this.game.time.now > h.cooldown) {
-                h.cooldown = this.game.time.now + 750;
+                h.cooldown = this.game.time.now + 300;
                 h.fired = true;
                 let bullet = this.enemyBullets.getFirstExists(false);
                 if (bullet) {
-                    let vx = this.player.x - h.x;
-                    let vy = this.player.y - h.y;
+                    let vx = this.player.body.x - h.body.x;
+                    let vy = this.player.body.y - h.body.y;
 
-                    bullet.reset(h.body.x, h.body.y);
+                    let angle = Math.atan2(vy, vx);
+
+                    vx = Math.cos(angle) * 400;
+                    vy = Math.sin(angle) * 400;
+
+                    bullet.reset(h.x, h.y);
+
                     bullet.body.velocity.x = vx;
                     bullet.body.velocity.y = vy;
                 }
@@ -176,16 +182,18 @@ gameState.prototype = {
             //  Reset the player, then check for movement keys
             this.player.body.velocity.setTo(0, 0);
 
+            let max_speed = 500;
+
             if (this.cursors.left.isDown) {
-                this.player.body.velocity.x = -200;
+                this.player.body.velocity.x = -max_speed;
             } else if (this.cursors.right.isDown) {
-                this.player.body.velocity.x = 200;
+                this.player.body.velocity.x = max_speed;
             }
 
             if (this.cursors.up.isDown) {
-                this.player.body.velocity.y = -200;
+                this.player.body.velocity.y = -max_speed;
             } else if (this.cursors.down.isDown) {
-                this.player.body.velocity.y = 200;
+                this.player.body.velocity.y = max_speed;
             }
 
             if (this.mainGunButton.isDown) {
