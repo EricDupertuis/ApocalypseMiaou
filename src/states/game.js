@@ -14,7 +14,6 @@ gameState.prototype = {
         this.scoreString = '';
         this.scoreText = null;
         this.lives = null;
-        this.enemyBullet = null;
     },
 
     preload: function () {
@@ -503,6 +502,9 @@ gameState.prototype = {
             }
 
             player.deathCooldown = this.game.time.now + 1000;
+
+            /* Remove all enemy bullets. */
+            this.enemyBullets.callAll('kill');
         }
     },
 
