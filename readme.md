@@ -4,7 +4,7 @@
 
 Project for the 2017 Global Game Jam
 
-A working demo is available here : COMING SOON
+A working demo is available here : [http://edupertuis.net/ApocalypseMiaou/](http://edupertuis.net/ApocalypseMiaou)
 
 ## The team
 - A.Chappuis, Music
