@@ -23,6 +23,14 @@ menuState.prototype = {
             wordWrap: true,
             wordWrapWidth: 600
         };
+
+        this.textConfigInstructions = {
+            font: "25px Arial",
+            fill: "#ecf0f1",
+            align: "center",
+            wordWrap: true,
+            wordWrapWidth: 600
+        };
     },
 
     preload: function () {
@@ -37,19 +45,18 @@ menuState.prototype = {
         this.background = this.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
 
         this.background.scale.setTo(1, 1);
-        this.background.autoScroll(-20, 0);
         this.background.alpha = 0.8;
 
         this.menuEntries[0] = this.game.add.text(
             this.game.world.centerX,
-            350,
+            500,
             'New Game',
             this.textConfig
         );
 
         this.menuEntries[1] = this.game.add.text(
             this.game.world.centerX,
-            400,
+            550,
             'Credits',
             this.textConfig
         );
@@ -67,9 +74,9 @@ menuState.prototype = {
         let keysText = "Move: Arrow keys\nFire: Q/W\nCharacter swap: E\n";
         this.game.add.text(
             this.game.world.centerX,
-            500,
+            600,
             keysText,
-            this.textConfig
+            this.textConfigInstructions
         ).anchor.setTo(0.5, 0.);
 
         this.game.input.onDown.add(this.goFullScreen, this);
