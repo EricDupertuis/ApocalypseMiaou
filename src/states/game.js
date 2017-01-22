@@ -242,6 +242,17 @@ gameState.prototype = {
         excavator.checkWorldBounds = true;
         excavator.armor = 50;
         excavator.armorTouchCooldown = 0;
+
+        excavator.events.onEnterBounds.add((e) => {
+            console.log("EXCAVATOR: entered bounds");
+            excavator.behaviour = (e) => {
+                let freq = 0.25;
+                let amplitude = 100;
+
+                e.body.velocity.x = 0;
+                e.body.velocity.y = Math.sin((this.game.time.now / 1000) * 2 * Math.PI * freq) * amplitude;
+            }
+        });
     },
 
     createChopper: function (x, y) {
@@ -310,6 +321,7 @@ gameState.prototype = {
         this.createHunter(6 * x, 10 * y);
         this.createHunter(8 * x, 10 * y);
         this.createHunter(10 * x, 10 * y);
+
         /* TODO: camion */
 
         this.createMeteor(1 * x, -2.5 * y);
@@ -323,7 +335,7 @@ gameState.prototype = {
         this.createChopper(6 * x, 5 * y);
         this.createChopper(7 * x, 5 * y);
 
-        this.createExcavator(9 * x, 6 * y);
+        this.createExcavator(7 * x, 6 * y);
     },
 
     setupInvader: function (invader) {
