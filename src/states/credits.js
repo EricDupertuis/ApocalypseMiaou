@@ -5,12 +5,11 @@ creditsState.prototype = {
     init: function() {
         this.credits = "Visuals:\nChloé Sengelen\nLionel Melchiorre\n\nSound design:\nAnthony Chappuis\n\nCode:\nAntoine Albertelli\nEric Dupertuis";
 
-        this.enterKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        this.goKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     },
 
     preload: function() {
-        this.game.load.baseURL = 'assets/prod/';
-        this.game.load.image('background', 'credits.png');
+        this.game.load.image('background', 'assets/prod/credits.png');
     },
 
     create: function() {
@@ -54,11 +53,18 @@ creditsState.prototype = {
 
         /* Fade in, display, fade out. */
         this.game.add.tween(this.game.world)
-                     .to( { alpha: 1 }, 1000, "Linear", true);
+            .to( { alpha: 1 }, 1000, "Linear", true);
     },
 
     update: function() {
+        if (this.goKey.isDown) {
+            this.game.add.tween(this.game.world)
+                .to({ alpha: 0 }, 500, "Linear", true)
+                .onComplete.add(() => {
+                    this.game.state.start("Menu");
+                }, this);
+        }
     }
-}
+};
 
 module.exports = creditsState;
