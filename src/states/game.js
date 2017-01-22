@@ -27,6 +27,7 @@ gameState.prototype = {
         this.game.load.spritesheet('lumberjack', 'assets/prod/enemies/bucheron.png', 100, 100, 12);
         this.game.load.spritesheet('meteor', 'assets/prod/enemies/meteor.png', 72, 150, 4);
         this.game.load.spritesheet('excavator', 'assets/prod/enemies/excavator.png', 260, 327);
+        this.game.load.spritesheet('arm', 'assets/prod/enemies/sprite_bras.png', 520, 426, 16);
 
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
@@ -156,11 +157,12 @@ gameState.prototype = {
                     }
                 }
 
-                if (next_animation && sprite.shooting) {
-                    next_animation = next_animation + "_shoot";
-                }
             } else {
                 next_animation = 'alternate_fly';
+            }
+
+            if (next_animation && sprite.shooting) {
+                next_animation = next_animation + "_shoot";
             }
 
             if (next_animation) {
@@ -256,10 +258,19 @@ gameState.prototype = {
     },
 
     createExcavator: function (x, y) {
+        let arm = this.ennemies.create(x, y, 'arm');
         let excavator = this.ennemies.create(x, y, 'excavator');
+        
         excavator.anchor.setTo(0.5, 1);
+
         excavator.animations.add('excavator');
         excavator.animations.play('excavator', 10, true);
+
+        excavator.arm = arm;
+        excavator.arm.anchor.setTo(1., 1.);
+
+        excavator.arm.animations.add('arm');
+        excavator.arm.animations.play('arm', 5, true);
 
         excavator.checkWorldBounds = true;
         excavator.armor = 50;
@@ -280,7 +291,7 @@ gameState.prototype = {
                     e.body.velocity.x = 100;
                 }
 
-                console.log(e.body.velocity.x);
+                e.arm.position = e.position;
             }
         }, this);
     },
