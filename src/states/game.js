@@ -338,14 +338,14 @@ gameState.prototype = {
     },
 
     createLevel: function () {
-        const debugBoss = true;
+        const debugBoss = false;
         let y = 60;
         let x = 666;
 
         if (debugBoss) {
             this.createExcavator(3 * x, 6 * y);
         } else {
-            for (let i = 1; i <= 30; i++) {
+            for (let i = 4; i <= 30; i++) {
                 this.createLumberjack(i * x, 6 * y);
                 this.createLumberjack((i + 0.2) * x, 7 * y);
             }
@@ -355,6 +355,8 @@ gameState.prototype = {
             this.createHunter(6 * x, 10 * y);
             this.createHunter(8 * x, 10 * y);
             this.createHunter(10 * x, 10 * y);
+            this.createHunter(12 * x, 10 * y);
+            this.createHunter(14 * x, 10 * y);
 
             /* TODO: camion */
 
@@ -362,14 +364,21 @@ gameState.prototype = {
             this.createMeteor(4 * x, -2.5 * y);
             this.createMeteor(7 * x, -2.5 * y);
             this.createMeteor(10 * x, -2.5 * y);
+            this.createMeteor(13 * x, -2.5 * y);
 
             this.createChopper(3 * x, 5 * y);
             this.createChopper(4 * x, 5 * y);
             this.createChopper(5 * x, 5 * y);
             this.createChopper(6 * x, 5 * y);
             this.createChopper(7 * x, 5 * y);
+            this.createChopper(8 * x, 5 * y);
+            this.createChopper(9 * x, 5 * y);
+            this.createChopper(10 * x, 5 * y);
+            this.createChopper(11 * x, 5 * y);
+            this.createChopper(12 * x, 5 * y);
+            this.createChopper(13 * x, 5 * y);
 
-            this.createExcavator(7 * x, 6 * y);
+            this.createExcavator(14 * x, 6 * y);
         }
     },
 
@@ -598,6 +607,9 @@ gameState.prototype = {
         if (bullet) {
             bullet.animations.add(animation);
             bullet.scale.setTo(1, 1);
+            bullet.outOfBoundsKill = true;
+            bullet.checkWorldBounds = true;
+
             //  And fire it
             bullet.reset(this.player.x, this.player.y + 8);
             bullet.animations.play(animation, 10, true, false);
