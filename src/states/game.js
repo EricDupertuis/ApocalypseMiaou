@@ -18,6 +18,7 @@ gameState.prototype = {
     },
 
     preload: function () {
+        this.game.load.audio('music', 'sounds/Feline_Freedom_Force.ogg');
         this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 53, 32);
         this.game.load.spritesheet('ice', 'assets/prod/effects/ice.png', 45, 45);
         this.game.load.spritesheet('missile', 'assets/prod/effects/missile.png', 84, 36);
@@ -106,6 +107,10 @@ gameState.prototype = {
         this.missileCooldown = 0;
         this.waveCooldown = 0;
         this.flameCooldown = 0;
+
+        this.music = this.game.add.audio('music');
+        this.music.loop = true;
+        this.music.play();
     },
 
     createPlayer: function () {
@@ -484,7 +489,12 @@ gameState.prototype = {
         if (this.player.shieldEnabled == false) {
             this.remainingLives--;
             if (this.remainingLives == 0) {
-                this.game.state.start("Credits");
+                this.music.fadeOut(500);
+                this.game.add.tween(this.game.world)
+                    .to( { alpha: 0 }, 500, "Linear", true )
+                    .onComplete.add(() => {
+                        this.game.state.start("Credits");
+                    }, this);
             }
 
             player.deathCooldown = this.game.time.now + 1000;
