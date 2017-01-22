@@ -276,6 +276,8 @@ gameState.prototype = {
         excavator.armor = 50;
         excavator.armorTouchCooldown = 0;
 
+        excavator.body.setSize(30, 100, 100, 100);
+
         excavator.events.onEnterBounds.add((e) => {
             console.log("EXCAVATOR: entered bounds");
 
@@ -494,7 +496,7 @@ gameState.prototype = {
                 if (this.mainGunButton.isDown) {
                     if (this.game.time.now > this.missileCooldown) {
                         this.fireBullet(null, 0, 'missile');
-                        this.missileCooldown = this.game.time.now + 200;
+                        this.missileCooldown = this.game.time.now + 500;
                     }
                 } else if (this.secondGunButton.isDown) {
                     if (this.game.time.now > this.flameCooldown) {
