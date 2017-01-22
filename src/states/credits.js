@@ -61,7 +61,7 @@ creditsState.prototype = {
             this.game.add.tween(this.game.world)
                 .to({ alpha: 0 }, 500, "Linear", true)
                 .onComplete.add(() => {
-                    this.game.state.start("Game");
+                    this.game.state.start("Menu");
                 }, this);
         }
     }
