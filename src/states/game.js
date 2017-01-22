@@ -267,7 +267,7 @@ gameState.prototype = {
         excavator.animations.play('excavator', 10, true);
 
         excavator.arm = arm;
-        excavator.arm.anchor.setTo(1., 1.);
+        excavator.arm.anchor.setTo(1., 1);
 
         excavator.arm.animations.add('arm');
         excavator.arm.animations.play('arm', 5, true);
@@ -292,6 +292,25 @@ gameState.prototype = {
                 }
 
                 e.arm.position = e.position;
+
+                if (!e.cooldown) {
+                    e.cooldown = 0;
+                }
+
+                if (this.game.time.now > e.cooldown) {
+                    e.cooldown = this.game.time.now + 100;
+
+                    let bullet = this.enemyBullets.getFirstExists(false);
+
+                    if (bullet) {
+                        bullet.reset(e.x, e.y);
+                        let freq = 0.4;
+                        let amplitude = 200;
+
+                        bullet.body.velocity.y = Math.sin((this.game.time.now / 1000) * 2 * Math.PI * freq) * amplitude;
+                        bullet.body.velocity.x = -Math.abs(Math.cos((this.game.time.now / 1000) * 2 * Math.PI * freq) * amplitude);
+                    }
+                }
             }
         }, this);
     },
@@ -349,7 +368,7 @@ gameState.prototype = {
     },
 
     createLevel: function () {
-        const debugBoss = false;
+        const debugBoss = true;
         let y = 60;
         let x = 666;
 
