@@ -25,6 +25,7 @@ gameState.prototype = {
         this.game.load.spritesheet('kaboom', 'assets/prod/effects/explosion.png', 512, 512, 8);
         this.game.load.spritesheet('lumberjack', 'assets/prod/enemies/bucheron.png', 100, 100, 12);
         this.game.load.spritesheet('meteor', 'assets/prod/enemies/meteor.png', 72, 150, 4);
+        this.game.load.spritesheet('excavator', 'assets/prod/enemies/excavator.png', 260, 327);
 
         this.game.load.image('enemyBullet', 'assets/example/enemy-bullet.png');
         this.game.load.image('chopper', 'assets/prod/enemies/helicopter.png');
