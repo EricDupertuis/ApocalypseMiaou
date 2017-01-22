@@ -14,6 +14,7 @@ gameState.prototype = {
         this.scoreString = '';
         this.scoreText = null;
         this.lives = null;
+        this.backgroundTween = null;
     },
 
     preload: function () {
@@ -41,7 +42,7 @@ gameState.prototype = {
 
         this.backgroundGroup = this.game.add.group();
 
-        this.game.add.tween(this.game.world)
+        this.backgroundTween = this.game.add.tween(this.game.world)
             .to( { alpha: 1 }, 1000, "Linear", true );
 
         // background image
@@ -266,14 +267,22 @@ gameState.prototype = {
 
         excavator.events.onEnterBounds.add((e) => {
             console.log("EXCAVATOR: entered bounds");
+
             excavator.behaviour = (e) => {
                 let freq = 0.25;
                 let amplitude = 100;
 
-                e.body.velocity.x = 0;
                 e.body.velocity.y = Math.sin((this.game.time.now / 1000) * 2 * Math.PI * freq) * amplitude;
+
+                if (e.body.x < 1000) {
+                    e.body.velocity.x = 200;
+                } else {
+                    e.body.velocity.x = 100;
+                }
+
+                console.log(e.body.velocity.x);
             }
-        });
+        }, this);
     },
 
     createChopper: function (x, y) {
@@ -329,34 +338,39 @@ gameState.prototype = {
     },
 
     createLevel: function () {
+        const debugBoss = true;
         let y = 60;
         let x = 666;
 
-        for (let i = 1; i <= 30; i++) {
-            this.createLumberjack(i * x, 6 * y);
-            this.createLumberjack((i + 0.2) * x, 7 * y);
+        if (debugBoss) {
+            this.createExcavator(3 * x, 6 * y);
+        } else {
+            for (let i = 1; i <= 30; i++) {
+                this.createLumberjack(i * x, 6 * y);
+                this.createLumberjack((i + 0.2) * x, 7 * y);
+            }
+
+            this.createHunter(2 * x, 10 * y);
+            this.createHunter(4 * x, 10 * y);
+            this.createHunter(6 * x, 10 * y);
+            this.createHunter(8 * x, 10 * y);
+            this.createHunter(10 * x, 10 * y);
+
+            /* TODO: camion */
+
+            this.createMeteor(1 * x, -2.5 * y);
+            this.createMeteor(4 * x, -2.5 * y);
+            this.createMeteor(7 * x, -2.5 * y);
+            this.createMeteor(10 * x, -2.5 * y);
+
+            this.createChopper(3 * x, 5 * y);
+            this.createChopper(4 * x, 5 * y);
+            this.createChopper(5 * x, 5 * y);
+            this.createChopper(6 * x, 5 * y);
+            this.createChopper(7 * x, 5 * y);
+
+            this.createExcavator(7 * x, 6 * y);
         }
-
-        this.createHunter(2 * x, 10 * y);
-        this.createHunter(4 * x, 10 * y);
-        this.createHunter(6 * x, 10 * y);
-        this.createHunter(8 * x, 10 * y);
-        this.createHunter(10 * x, 10 * y);
-
-        /* TODO: camion */
-
-        this.createMeteor(1 * x, -2.5 * y);
-        this.createMeteor(4 * x, -2.5 * y);
-        this.createMeteor(7 * x, -2.5 * y);
-        this.createMeteor(10 * x, -2.5 * y);
-
-        this.createChopper(3 * x, 5 * y);
-        this.createChopper(4 * x, 5 * y);
-        this.createChopper(5 * x, 5 * y);
-        this.createChopper(6 * x, 5 * y);
-        this.createChopper(7 * x, 5 * y);
-
-        this.createExcavator(7 * x, 6 * y);
     },
 
     setupInvader: function (invader) {
