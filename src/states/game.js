@@ -287,6 +287,8 @@ gameState.prototype = {
             e.armor = 50;
             e.base_y = e.body.position.y;
 
+            e.shots = 0;
+
             excavator.behaviour = (e) => {
                 let freq = 0.25;
                 let amplitude = 200;
@@ -311,6 +313,15 @@ gameState.prototype = {
                     let bullet = this.enemyBullets.getFirstExists(false);
 
                     if (bullet) {
+                        e.shots ++;
+
+                        if (e.shots % 2 == 0) {
+                            bullet.scale.setTo(2, 2);
+                        } else {
+                            bullet.scale.setTo(1, 1);
+                        }
+
+
                         bullet.reset(e.x, e.y);
                         let freq = 0.4;
                         let amplitude = 200;
@@ -376,7 +387,7 @@ gameState.prototype = {
     },
 
     createLevel: function () {
-        const debugBoss = false;
+        const debugBoss = true;
         let y = 60;
         let x = 666;
 
