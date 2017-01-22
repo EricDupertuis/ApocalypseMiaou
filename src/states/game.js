@@ -261,6 +261,8 @@ gameState.prototype = {
     createExcavator: function (x, y) {
         let arm = this.ennemies.create(x, y, 'arm');
         let excavator = this.ennemies.create(x, y, 'excavator');
+
+        excavator.base_y = y;
         
         excavator.anchor.setTo(0.5, 1);
 
@@ -269,12 +271,13 @@ gameState.prototype = {
 
         excavator.arm = arm;
         excavator.arm.anchor.setTo(1., 1);
+        excavator.arm.armor = 10000;
 
         excavator.arm.animations.add('arm');
         excavator.arm.animations.play('arm', 5, true);
 
         excavator.checkWorldBounds = true;
-        excavator.armor = 50;
+        excavator.armor = 50000;
         excavator.armorTouchCooldown = 0;
 
         excavator.body.setSize(30, 100, 100, 100);
@@ -282,17 +285,21 @@ gameState.prototype = {
         excavator.events.onEnterBounds.add((e) => {
             console.log("EXCAVATOR: entered bounds");
 
+            e.arm.armor = 25;
+            e.armor = 50;
+            e.base_y = e.body.position.y;
+
             excavator.behaviour = (e) => {
                 let freq = 0.25;
-                let amplitude = 100;
-
-                e.body.velocity.y = Math.sin((this.game.time.now / 1000) * 2 * Math.PI * freq) * amplitude;
+                let amplitude = 200;
 
                 if (e.body.x < 1000) {
-                    e.body.velocity.x = 200;
+                    e.body.velocity.x = 400;
                 } else {
                     e.body.velocity.x = 100;
                 }
+
+                e.body.position.y = e.base_y + Math.sin((this.game.time.now / 1000) * 2 * Math.PI * freq) * amplitude;
 
                 e.arm.position = e.position;
 
@@ -376,7 +383,7 @@ gameState.prototype = {
         let x = 666;
 
         if (debugBoss) {
-            this.createExcavator(3 * x, 6 * y);
+            this.createExcavator(3 * x, 8 * y);
         } else {
             for (let i = 4; i <= 30; i++) {
                 this.createLumberjack(i * x, 6 * y);
@@ -411,7 +418,7 @@ gameState.prototype = {
             this.createChopper(12 * x, 5 * y);
             this.createChopper(13 * x, 5 * y);
 
-            this.createExcavator(14 * x, 6 * y);
+            this.createExcavator(14 * x, 8 * y);
         }
     },
 
