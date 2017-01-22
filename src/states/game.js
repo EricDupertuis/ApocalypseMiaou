@@ -22,7 +22,7 @@ gameState.prototype = {
         this.game.load.spritesheet('fireball', 'assets/prod/effects/fireball.png', 53, 32);
         this.game.load.spritesheet('ice', 'assets/prod/effects/ice.png', 45, 45);
         this.game.load.spritesheet('missile', 'assets/prod/effects/missile.png', 84, 36);
-        this.game.load.spritesheet('invader', 'assets/example/invader32x32x4.png', 64, 64);
+        this.game.load.spritesheet('hunter', 'assets/prod/enemies/hunter.png', 128, 128, 8);
         this.game.load.spritesheet('kaboom', 'assets/prod/effects/explosion.png', 512, 512, 8);
         this.game.load.spritesheet('lumberjack', 'assets/prod/enemies/bucheron.png', 100, 100, 12);
         this.game.load.spritesheet('meteor', 'assets/prod/enemies/meteor.png', 72, 150, 4);
@@ -197,7 +197,9 @@ gameState.prototype = {
     },
 
     createHunter: function(x, y) {
-        let hunter = this.ennemies.create(x, y, 'invader');
+        let hunter = this.ennemies.create(x, y, 'hunter');
+        hunter.animations.add('hunt', [0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1], 6, true);
+        hunter.animations.play('hunt');
         hunter.checkWorldBounds = true;
 
         hunter.events.onEnterBounds.add((h) => {
@@ -378,7 +380,7 @@ gameState.prototype = {
     },
 
     createLevel: function () {
-        const debugBoss = true;
+        const debugBoss = false;
         let y = 60;
         let x = 666;
 
