@@ -110,6 +110,10 @@ gameState.prototype = {
         this.music = this.game.add.audio('music');
         this.music.loop = true;
         this.music.play();
+
+        this.game.camera.onShakeComplete.add(() => {
+            this.game.camera.position.setTo(0, 0);
+        }, this);
     },
 
     createPlayer: function () {
@@ -502,6 +506,7 @@ gameState.prototype = {
             }
 
             player.deathCooldown = this.game.time.now + 1000;
+            this.game.camera.shake(0.02, 100);
 
             /* Remove all enemy bullets. */
             this.enemyBullets.callAll('kill');
