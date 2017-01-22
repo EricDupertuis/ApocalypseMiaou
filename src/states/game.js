@@ -14,7 +14,6 @@ gameState.prototype = {
         this.scoreString = '';
         this.scoreText = null;
         this.lives = null;
-        this.enemyBullet = null;
     },
 
     preload: function () {
@@ -111,6 +110,10 @@ gameState.prototype = {
         this.music = this.game.add.audio('music');
         this.music.loop = true;
         this.music.play();
+
+        this.game.camera.onShakeComplete.add(() => {
+            this.game.camera.position.setTo(0, 0);
+        }, this);
     },
 
     createPlayer: function () {
@@ -120,35 +123,47 @@ gameState.prototype = {
         player.shieldEnabled = false;
         player.shieldEnergyMax = 100;
         player.shieldEnergy = player.shieldEnergyMax;
+        player.shooting = false;
         this.game.physics.enable(player, Phaser.Physics.ARCADE);
 
         let updateAnimation = (sprite, animation) => {
-            if (sprite.alternateCharacter == false) {
-                let animation_name = animation.name.replace("alternate_", "");
+            let animation_name = animation.name
+                .replace("alternate_", "")
+                .replace("_shoot", "");
+            let next_animation = animation_name;
 
+            if (sprite.alternateCharacter == false) {
                 if (animation_name == 'halt') {
                     if (sprite.moving) {
-                        sprite.animations.play('accelerate');
+                        next_animation = 'accelerate';
                     }
                 } else if (animation_name == 'accelerate') {
                     if (sprite.moving) {
-                        sprite.animations.play('fly');
+                        next_animation = 'fly';
                     } else {
-                        sprite.animations.play('break');
+                        next_animation = 'break';
                     }
                 } else if (animation_name == 'fly') {
                     if (!sprite.moving) {
-                        sprite.animations.play('break');
+                        next_animation = 'break';
                     }
                 } else if (animation_name == 'break') {
                    if (sprite.moving) {
-                        sprite.animations.play('accelerate');
+                        next_animation = 'accelerate';
                     } else {
-                        sprite.animations.play('halt');
+                        next_animation = 'halt';
                     }
                 }
+
+                if (next_animation && sprite.shooting) {
+                    next_animation = next_animation + "_shoot";
+                }
             } else {
-                sprite.animations.play('alternate_fly');
+                next_animation = 'alternate_fly';
+            }
+
+            if (next_animation) {
+                sprite.animations.play(next_animation);
             }
         };
 
@@ -156,6 +171,12 @@ gameState.prototype = {
         player.animations.add('halt', [0], 16, true).onLoop.add(updateAnimation);
         player.animations.add('accelerate', [0, 1, 2, 3, 4], 16, false).onComplete.add(updateAnimation);
         player.animations.add('break', [4, 3, 2, 1, 0], 16, false).onComplete.add(updateAnimation);
+
+        player.animations.add('fly_shoot', [8, 9], 16, true).onLoop.add(updateAnimation);
+        player.animations.add('halt_shoot', [5], 16, true).onLoop.add(updateAnimation);
+        player.animations.add('accelerate_shoot', [5, 6, 7, 8, 9], 16, false).onComplete.add(updateAnimation);
+        player.animations.add('break_shoot', [9, 8, 7, 6, 5], 16, false).onComplete.add(updateAnimation);
+
         player.animations.add('alternate_fly', [10, 11, 12, 13, 14, 13, 12, 11], 16, true).onLoop.add(updateAnimation);;
 
         /* Now do the same for the alternate skin. */
@@ -452,6 +473,8 @@ gameState.prototype = {
                 }
             }
 
+            this.player.shooting = this.mainGunButton.isDown || this.secondGunButton.isDown;
+
             /* Apply tint if we recently got hit. */
             if (this.game.time.now < this.player.deathCooldown) {
                 this.player.tint = 0xff0000;
@@ -515,6 +538,10 @@ gameState.prototype = {
             }
 
             player.deathCooldown = this.game.time.now + 1000;
+            this.game.camera.shake(0.02, 100);
+
+            /* Remove all enemy bullets. */
+            this.enemyBullets.callAll('kill');
         }
     },
 
