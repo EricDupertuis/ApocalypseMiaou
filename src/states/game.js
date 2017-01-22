@@ -217,7 +217,7 @@ gameState.prototype = {
 
     createMeteor: function (x, y) {
         let meteor = this.ennemies.create(x, 0, 'meteor');
-        meteor.anchor.setTo(0.5, 1.);
+        meteor.anchor.setTo(0.5, 1);
         meteor.animations.add('meteor');
         meteor.animations.play('meteor', 10, true);
 
@@ -226,6 +226,17 @@ gameState.prototype = {
                 meteor.body.velocity.y = 800;
             }
         }
+    },
+
+    createExcavator: function (x, y) {
+        let excavator = this.ennemies.create(x, y, 'excavator');
+        excavator.anchor.setTo(0.5, 1);
+        excavator.animations.add('excavator');
+        excavator.animations.play('excavator', 10, true);
+
+        excavator.checkWorldBounds = true;
+        excavator.armor = 50;
+        excavator.armorTouchCooldown = 0;
     },
 
     createChopper: function (x, y) {
@@ -306,6 +317,8 @@ gameState.prototype = {
         this.createChopper(5 * x, 5 * y);
         this.createChopper(6 * x, 5 * y);
         this.createChopper(7 * x, 5 * y);
+
+        this.createExcavator(9 * x, 6 * y);
     },
 
     setupInvader: function (invader) {
@@ -437,7 +450,7 @@ gameState.prototype = {
             //  Run collision
             this.game.physics.arcade.overlap(this.bullets, this.ennemies, this.collisionHandler, null, this);
             this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.hitPlayer, null, this);
-            this.game.physics.arcade.overlap(this.player, this.ennemies, this.hitPlayer, null, this);
+            this.game.physics.arcade.overlap(this.player, this.ennemies, this.hitEnemy, null, this);
         }
     },
 
@@ -466,6 +479,25 @@ gameState.prototype = {
             this.scoreText.text = this.scoreString + this.score;
 
             this.enemyBullets.callAll('kill', this);
+        }
+    },
+
+    hitEnemy: function (player) {
+        if (this.game.time.now < player.deathCooldown) {
+            return;
+        }
+
+        let explosion = this.explosions.getFirstExists(false);
+        explosion.reset(player.body.x, player.body.y);
+        explosion.play('kaboom', 16, false, true);
+
+        if (this.player.shieldEnabled == false) {
+            this.remainingLives--;
+            if (this.remainingLives == 0) {
+                this.game.state.start("Credits");
+            }
+
+            player.deathCooldown = this.game.time.now + 1000;
         }
     },
 
