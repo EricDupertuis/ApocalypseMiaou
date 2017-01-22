@@ -181,6 +181,7 @@ gameState.prototype = {
         player.animations.add('break_shoot', [9, 8, 7, 6, 5], 16, false).onComplete.add(updateAnimation);
 
         player.animations.add('alternate_fly', [10, 11, 12, 13, 14, 13, 12, 11], 16, true).onLoop.add(updateAnimation);;
+        player.animations.add('alternate_fly_shoot', [15, 16, 17, 18, 19, 18, 17, 16], 16, true).onLoop.add(updateAnimation);;
 
         /* Now do the same for the alternate skin. */
         player.animations.play('alternate_fly');
