@@ -276,6 +276,7 @@ gameState.prototype = {
 
         excavator.checkWorldBounds = true;
         excavator.armor = 50000;
+
         excavator.armorTouchCooldown = 0;
 
         excavator.body.setSize(30, 100, 100, 100);
@@ -332,6 +333,8 @@ gameState.prototype = {
                 }
             }
         }, this);
+
+        return excavator;
     },
 
     createChopper: function (x, y) {
@@ -387,12 +390,12 @@ gameState.prototype = {
     },
 
     createLevel: function () {
-        const debugBoss = true;
+        const debugBoss = false;
         let y = 60;
         let x = 666;
 
         if (debugBoss) {
-            this.createExcavator(3 * x, 8 * y);
+            this.boss = this.createExcavator(3 * x, 8 * y);
         } else {
             for (let i = 4; i <= 30; i++) {
                 this.createLumberjack(i * x, 6 * y);
@@ -427,7 +430,7 @@ gameState.prototype = {
             this.createChopper(12 * x, 5 * y);
             this.createChopper(13 * x, 5 * y);
 
-            this.createExcavator(14 * x, 8 * y);
+            this.boss = this.createExcavator(14 * x, 8 * y);
         }
     },
 
@@ -563,6 +566,16 @@ gameState.prototype = {
             this.game.physics.arcade.overlap(this.bullets, this.ennemies, this.collisionHandler, null, this);
             this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.hitPlayer, null, this);
             this.game.physics.arcade.overlap(this.player, this.ennemies, this.hitEnemy, null, this);
+
+            if (this.boss && this.boss.alive == false) {
+                this.music.fadeOut(500);
+                this.game.add.tween(this.game.world)
+                    .to( { alpha: 0 }, 500, "Linear", true )
+                    .onComplete.add(() => {
+                        this.game.state.start("Credits");
+                    }, this);
+            }
+
         }
     },
 
