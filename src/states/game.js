@@ -49,6 +49,8 @@ gameState.prototype = {
         this.bullets = this.game.add.group();
         this.bullets.enableBody = true;
         this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+        this.bullets.setAll('outOfBoundsKill', true);
+        this.bullets.setAll('checkWorldBounds', true);
 
         // The enemy's bullets
         let enemyBullets = this.game.add.group();
@@ -96,7 +98,7 @@ gameState.prototype = {
         //  And some controls to play the game with
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
-        this.slowDownButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+        this.slowDownButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
         this.mainGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
         this.secondGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
@@ -222,13 +224,7 @@ gameState.prototype = {
         meteor.animations.add('meteor');
         meteor.animations.play('meteor', 10, true);
 
-        meteor.behaviour = (m) => {
-            if (this.player.x >= m.body.x) {
-                meteor.body.velocity.y = 1000;
-            }
-        };
     },
-
     createChopper: function (x, y) {
         let chopper = this.ennemies.create(x, y, 'chopper');
         chopper.checkWorldBounds = true;
@@ -287,18 +283,20 @@ gameState.prototype = {
 
         for (let i = 1; i <= 30; i++) {
             this.createLumberjack(i * x, 6 * y);
-            this.createLumberjack((i + 0.5) * x, 7 * y);
+            this.createLumberjack((i + 0.2) * x, 7 * y);
         }
 
-        for (let i = 2; i <= 30; i++) {
-            this.createHunter(2 * x, 10 * y);
-            i += 2;
-        }
+        this.createHunter(2 * x, 10 * y);
+        this.createHunter(4 * x, 10 * y);
+        this.createHunter(6 * x, 10 * y);
+        this.createHunter(8 * x, 10 * y);
+        this.createHunter(10 * x, 10 * y);
         /* TODO: camion */
 
         this.createMeteor(1 * x, -2.5 * y);
         this.createMeteor(4 * x, -2.5 * y);
         this.createMeteor(7 * x, -2.5 * y);
+        this.createMeteor(10 * x, -2.5 * y);
 
         this.createChopper(3 * x, 5 * y);
         this.createChopper(4 * x, 5 * y);
@@ -515,7 +513,6 @@ gameState.prototype = {
             bullet.bulletUpdate = update;
         }
     },
-
 
     resetBullet: function (bullet) {
         //  Called if the bullet goes out of the screen
