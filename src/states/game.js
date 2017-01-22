@@ -64,6 +64,7 @@ gameState.prototype = {
         this.enemyBullets.setAll('checkWorldBounds', true);
 
         this.player = this.createPlayer();
+        this.remainingLives = 3;
         this.game.camera.follow(this.player);
 
         //  The baddies!
@@ -80,15 +81,7 @@ gameState.prototype = {
         this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, {font: '34px Arial', fill: '#fff'});
 
         //  Lives
-        this.lives = this.game.add.group();
-        this.game.add.text(this.game.world.width - 100, 10, 'Lives : ', {font: '34px Arial', fill: '#fff'});
-
-        for (let i = 0; i < 3; i++) {
-            let lion = this.lives.create(this.game.world.width - 100 + (30 * i), 60, 'lion');
-            lion.anchor.setTo(0.5, 0.5);
-            lion.angle = 90;
-            lion.alpha = 0.4;
-        }
+        this.shieldText = this.game.add.text(this.game.world.width - 400, 10, 'Shield: ', {font: '34px Arial', fill: '#fff'});
 
         //  An explosion pool
         this.explosions = this.game.add.group();
@@ -103,7 +96,7 @@ gameState.prototype = {
         this.mainGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
         this.secondGunButton = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
 
-        this.swapButton = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+        this.swapButton = this.game.input.keyboard.addKey(Phaser.Keyboard.E);
         this.swapButton.onDown.add(this.swapCharacter, this);
 
         this.missileCooldown = 0;
@@ -214,8 +207,11 @@ gameState.prototype = {
 
     createLumberjack: function (x, y) {
         let lumberjack = this.ennemies.create(x, y, 'lumberjack');
-        lumberjack.animations.add('lumberjack');
-        lumberjack.animations.play('lumberjack', 10, true);
+        lumberjack.animations.add('chop', [0, 1, 2, 3, 4, 5, 4, 3, 2, 1], 10, true);
+        lumberjack.animations.play('chop');
+
+        // Avoid having  all lumberjacks stay in sync
+        lumberjack.animations.currentAnim.setFrame(Math.floor(Math.random()*5), true);
     },
 
     createMeteor: function (x, y) {
@@ -428,6 +424,9 @@ gameState.prototype = {
                 this.player.tint = 0xffffff;
             }
 
+            // Update shield text
+            this.shieldText.text = "Shield: " + this.player.shieldEnergy;
+
             //  Run collision
             this.game.physics.arcade.overlap(this.bullets, this.ennemies, this.collisionHandler, null, this);
             this.game.physics.arcade.overlap(this.enemyBullets, this.player, this.hitPlayer, null, this);
@@ -476,14 +475,8 @@ gameState.prototype = {
         explosion.play('kaboom', 16, false, true);
 
         if (this.player.shieldEnabled == false) {
-            this.live = this.lives.getFirstAlive();
-
-            if (this.live) {
-                this.live.kill();
-            }
-
-            // When the player dies
-            if (this.lives.countLiving() < 1) {
+            this.remainingLives--;
+            if (this.remainingLives == 0) {
                 this.game.state.start("Menu");
             }
 
