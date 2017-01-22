@@ -1,0 +1,9 @@
+base_folder: assets/raw/level_tiles
+output: assets/prod/credits.png
+height: 720 # pixels
+
+tiles:
+  - fg: ville_1.png
+    bg: ciel_3.png
+  - fg: ville_2.png
+    bg: ciel_3.png

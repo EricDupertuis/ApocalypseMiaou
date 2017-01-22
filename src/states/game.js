@@ -477,7 +477,7 @@ gameState.prototype = {
         if (this.player.shieldEnabled == false) {
             this.remainingLives--;
             if (this.remainingLives == 0) {
-                this.game.state.start("Menu");
+                this.game.state.start("Credits");
             }
 
             player.deathCooldown = this.game.time.now + 1000;
