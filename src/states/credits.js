@@ -3,7 +3,7 @@ let creditsState = (game) => {
 
 creditsState.prototype = {
     init: function() {
-        this.credits = "Visuals:\nChloé Sengelen\nLionel Melchiorre\n\nSound design:\nAnthony Chappuis\n\nCode:\nAntoine Albertelli\nEric Dupertuis";
+        this.credits = ["Visuals:\nChloé Sengelen\nLionel Melchiorre", "Sound design:\nAnthony Chappuis", "Code:\nAntoine Albertelli\nEric Dupertuis"];
 
         this.goKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     },
@@ -42,9 +42,25 @@ creditsState.prototype = {
         this.titleText.anchor.setTo(0.5, 0.5);
 
         this.creditText = this.game.add.text(
+            this.game.world.centerX - 300,
+            this.game.world.centerY + 120,
+            this.credits[0],
+            textConfig
+        );
+        this.creditText.anchor.set(0.5);
+
+        this.creditText = this.game.add.text(
             this.game.world.centerX,
-            this.game.world.centerY + 180,
-            this.credits,
+            this.game.world.centerY + 120,
+            this.credits[1],
+            textConfig
+        );
+        this.creditText.anchor.set(0.5);
+
+        this.creditText = this.game.add.text(
+            this.game.world.centerX + 300,
+            this.game.world.centerY + 120,
+            this.credits[2],
             textConfig
         );
 

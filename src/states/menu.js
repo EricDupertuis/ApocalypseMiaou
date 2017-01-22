@@ -28,7 +28,7 @@ menuState.prototype = {
             font: "25px Arial",
             fill: "#ecf0f1",
             align: "center",
-            wordWrap: true,
+            wordWrap: false,
             wordWrapWidth: 600
         };
     },
@@ -71,10 +71,10 @@ menuState.prototype = {
 
         this.fadeIn = this.game.add.tween(this.game.world).to( { alpha: 1 }, 500, "Linear", true );
 
-        let keysText = "Move: Arrow keys\nFire: Q/W\nCharacter swap: E\n";
+        let keysText = "Move: Arrow keys          Fire: Q/W          Character swap: E";
         this.game.add.text(
             this.game.world.centerX,
-            600,
+            650,
             keysText,
             this.textConfigInstructions
         ).anchor.setTo(0.5, 0.);
