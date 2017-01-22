@@ -438,6 +438,7 @@ gameState.prototype = {
         invader.anchor.x = 0.5;
         invader.anchor.y = 0.5;
         invader.animations.add('kaboom');
+        invader.alpha = 0.7;
     },
 
     moveLeft: function () {
