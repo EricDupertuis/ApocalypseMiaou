@@ -156,11 +156,12 @@ gameState.prototype = {
                     }
                 }
 
-                if (next_animation && sprite.shooting) {
-                    next_animation = next_animation + "_shoot";
-                }
             } else {
                 next_animation = 'alternate_fly';
+            }
+
+            if (next_animation && sprite.shooting) {
+                next_animation = next_animation + "_shoot";
             }
 
             if (next_animation) {
