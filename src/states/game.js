@@ -220,7 +220,13 @@ gameState.prototype = {
         meteor.animations.add('meteor');
         meteor.animations.play('meteor', 10, true);
 
+        meteor.behaviour = (m) => {
+            if (m.body.x < this.player.x) {
+                meteor.body.velocity.y = 800;
+            }
+        }
     },
+
     createChopper: function (x, y) {
         let chopper = this.ennemies.create(x, y, 'chopper');
         chopper.checkWorldBounds = true;
