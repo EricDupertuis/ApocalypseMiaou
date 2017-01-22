@@ -12,4 +12,4 @@ game.state.add("Game", gameState);
 game.state.add("Credits", creditsState);
 
 //TODO: Turn this back to "Menu"
-game.state.start("Game");
+game.state.start("Menu");

@@ -1,0 +1,9 @@
+base_folder: assets/raw/level_tiles
+output: assets/prod/menu.png
+height: 720 # pixels
+
+tiles:
+  - fg: arbre_vert_1.png
+    bg: ciel_1.png
+  - fg: arbre_vert_2.png
+    bg: ciel_1.png

@@ -41,6 +41,9 @@ gameState.prototype = {
 
         this.backgroundGroup = this.game.add.group();
 
+        this.game.add.tween(this.game.world)
+            .to( { alpha: 1 }, 1000, "Linear", true );
+
         // background image
         for (let i=1; i<5; i++) {
             this.backgroundGroup.create(5333 * (i - 1), 0, 'background' + i);
@@ -103,9 +106,6 @@ gameState.prototype = {
         this.missileCooldown = 0;
         this.waveCooldown = 0;
         this.flameCooldown = 0;
-
-        this.game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
-        this.game.input.onDown.add(this.goFullScreen, this);
     },
 
     createPlayer: function () {
@@ -519,13 +519,6 @@ gameState.prototype = {
         bullet.kill();
     },
 
-    goFullScreen: function () {
-        if (this.game.scale.isFullScreen) {
-            this.game.scale.stopFullScreen();
-        } else {
-            this.game.scale.startFullScreen(true);
-        }
-    }
 }
 
 module.exports = gameState;
